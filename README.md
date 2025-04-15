@@ -35,19 +35,22 @@ Place the file locally as:
 
 ## 🗂️ Project Structure
 
-| File                           | Description                                                   |
-|--------------------------------|---------------------------------------------------------------|
-| `scripts/01_load_data.R`       | Load packages and import BFS wage data                       |
-| `scripts/02_clean_transform.R` | Data wrangling: reshape, label variables, create factors      |
-| `scripts/03_explore_data.R`    | Visualizations by gender, year, industry, requirement level   |
-| `scripts/04_model_ci.R`        | Confidence intervals using `qnorm()`                          |
-| `scripts/05_model_lm.R`        | Linear regression analysis on wage differences                |
-| `scripts/06_tables_export.R`   | Create and export formatted summary tables                    |
-| `07_final_pipeline.R`          | Compact pipeline version with all steps                       |
-| `gender_pay_gap.qmd`           | Final Quarto report                                           |
-| `gender_pay_gap.html`          | Rendered HTML version for submission                          |
-| `.gitignore`                   | Excludes data and system-specific files                       |
-| `README.md`                    | This project overview                                         |
+| File                             | Description                                                   |
+|----------------------------------|---------------------------------------------------------------|
+| `scripts/01_load_data.R`         | Load packages and import BFS wage data                       |
+| `scripts/02_clean_transform.R`   | Data wrangling: reshape, label variables, create factors      |
+| `scripts/03_explore_data.R`      | Visualizations by gender, year, industry, requirement level   |
+| `scripts/04_model_ci.R`          | Confidence intervals using `qnorm()`                          |
+| `scripts/05_model_lm.R`          | Linear regression analysis on wage differences                |
+| `scripts/06_tables_export.R`     | Create and export formatted summary tables                    |
+| `07_final_pipeline.R`            | Compact pipeline version with all steps                       |
+| `gender_pay_gap.qmd`             | Final Quarto report                                           |
+| `gender_pay_gap.html`            | Rendered HTML version for submission                          |
+| `data/bfs_gender_pay_gap.csv`    | Local copy of BFS dataset (excluded via `.gitignore`)         |
+| `plots/`                         | Optional folder for exported `ggplot2` visualizations         |
+| `.gitignore`                     | Excludes data and system-specific files                       |
+| `README.md`                      | This project overview                                         |
+| `LICENSE`                        | MIT License for reuse                                         |
 
 ---
 
