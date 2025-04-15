@@ -2,16 +2,16 @@
 
 This project was developed as part of the **Transferarbeit** in the  
 [Nachdiplomkurs HF Data Science (NDK HF)](https://www.ibaw.ch/bildung/weiterbildung/data-science).  
-It explores the occurrence of **autistic traits in adults**, with a special focus on  
-**female presentation and its connection to mental health factors**.
+It explores the expression of **autistic traits in adults**, with a special focus on  
+**gender differences and psychological factors** based on the ABIDE dataset.
 
 ---
 
 ## 🎯 Goal
 
-The objective is to investigate the relationship between autism screening scores,  
-personality traits (OCEAN), and self-reported psychological burdens such as  
-stress, anxiety, and depression – with a particular interest in **underdiagnosed autism in women**.
+The objective is to analyze the demographic and cognitive characteristics  
+associated with autism in adults, with particular attention to potential  
+gender-related underdiagnosis and the interplay with mental health variables.
 
 The report includes **visualizations**, **statistical modeling** (linear regression), and  
 **confidence intervals** based on the normal distribution using `qnorm()`.
@@ -20,19 +20,16 @@ The report includes **visualizations**, **statistical modeling** (linear regress
 
 ## 📚 Data Source
 
-The dataset is provided via [Kaggle](https://www.kaggle.com/datasets/ntekie/autism-spectrum-disorder-traits)  
-and includes the following variables:
+The dataset is provided via Kaggle as part of the  
+[ABIDE (Autism Brain Imaging Data Exchange) competition](https://www.kaggle.com/competitions/abide/data).
 
-- AQ-10 screening score (autistic traits)  
-- Big Five personality scores (OCEAN)  
-- Gender, age, and other demographics  
-- Self-assessment of psychological burdens (stress, anxiety, etc.)
+📦 **Only the phenotypic CSV file is used in this project** (no imaging data).
 
 ⚠️ **Note:** The dataset is **not included** in this repository.  
-Please download the CSV manually from Kaggle and save it locally as:
+Please download the phenotypic file manually and save it locally as:
 
 ```text
-data/autism_traits.csv
+data/abide_phenotypic.csv
 ```
 
 ---
@@ -41,11 +38,11 @@ data/autism_traits.csv
 
 | File                             | Description                                                   |
 |----------------------------------|---------------------------------------------------------------|
-| `scripts/01_load_data.R`         | Load packages and import the autism traits dataset            |
-| `scripts/02_clean_transform.R`   | Data cleaning and preparation (factor levels, renaming etc.)  |
-| `scripts/03_explore_data.R`      | Visualizations by gender, AQ score, mental health indicators   |
+| `scripts/01_load_data.R`         | Load packages and import ABIDE CSV dataset                    |
+| `scripts/02_clean_transform.R`   | Data cleaning and preparation (e.g. rename, factor conversion)|
+| `scripts/03_explore_data.R`      | Visualizations by diagnosis, sex, IQ, age                     |
 | `scripts/04_model_ci.R`          | Confidence intervals using `qnorm()`                          |
-| `scripts/05_model_lm.R`          | Linear regression analysis on AQ score and mental health      |
+| `scripts/05_model_lm.R`          | Linear regression on IQ, diagnosis, and gender                |
 | `scripts/06_tables_export.R`     | Create and export formatted summary tables                    |
 | `07_final_pipeline.R`            | Compact pipeline version with all steps                       |
 | `autism_spectrum_analysis.qmd`   | Final Quarto report                                           |
@@ -60,10 +57,10 @@ data/autism_traits.csv
 
 | Element                | Description                                         |
 |------------------------|-----------------------------------------------------|
-| Sample size            | ~300 individuals                                    |
-| Main metric            | AQ-10 score (screening indicator)                   |
+| Sample size            | ~1000 individuals                                   |
+| Main metric            | Full IQ, diagnosis group (ASD / control)            |
 | CI coverage            | 95 % using `qnorm()`                                |
-| Regression             | AQ ~ Gender + Stress + Depression + Personality     |
+| Regression             | IQ ~ Diagnosis + Gender + Age                       |
 | Visual types           | Histograms, Boxplots, Scatterplots, Violin plots    |
 | Table format           | `gt` table, formatted in Quarto report              |
 
