@@ -1,0 +1,14 @@
+# R Studio & System
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+
+# Lokale Daten
+data/
+
+# Temporäre Dateien
+*.log
+*.tmp
+*.bak

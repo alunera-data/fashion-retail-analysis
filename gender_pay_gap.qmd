@@ -1,0 +1,11 @@
+---
+title: "Gender Pay Gap in Switzerland"
+author: "Yvonne Kirschler"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(gt)
