@@ -46,8 +46,6 @@ Place the file locally as:
 | `07_final_pipeline.R`            | Compact pipeline version with all steps                       |
 | `gender_pay_gap.qmd`             | Final Quarto report                                           |
 | `gender_pay_gap.html`            | Rendered HTML version for submission                          |
-| `data/bfs_gender_pay_gap.csv`    | Local copy of BFS dataset (excluded via `.gitignore`)         |
-| `plots/`                         | Optional folder for exported `ggplot2` visualizations         |
 | `.gitignore`                     | Excludes data and system-specific files                       |
 | `README.md`                      | This project overview                                         |
 | `LICENSE`                        | MIT License for reuse                                         |
