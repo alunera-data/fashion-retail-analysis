@@ -182,27 +182,27 @@ and evaluating pricing and discount strategies in the next steps.
 
 ## Confidence Interval Calculation
 
-To estimate the reliability of average transaction revenues,  
+To estimate the reliability of average transaction revenues,\
 95% confidence intervals were calculated using the normal distribution and the `qnorm()` function.
 
 ### Example (Theoretical)
 
 As required by the assessment, a demonstration was performed using the following standard example:
 
-```r
+``` r
 qnorm(c(0.025, 0.975), mean = 2, sd = 1.2)
 ```
 
-This results in the lower and upper boundaries of the 95% confidence interval  
+This results in the lower and upper boundaries of the 95% confidence interval\
 for a normally distributed variable with a mean of 2 and a standard deviation of 1.2.
 
 ### Real-World Application
 
-To apply this method to actual data, line revenues from transactions were grouped by whether a discount was applied.  
-Then, the sample mean, standard deviation, and sample size were used to calculate confidence intervals  
+To apply this method to actual data, line revenues from transactions were grouped by whether a discount was applied.\
+Then, the sample mean, standard deviation, and sample size were used to calculate confidence intervals\
 via:
 
-```r
+``` r
 qnorm(c(0.025, 0.975), mean = mean_value, sd = sd_value / sqrt(n))
 ```
 
@@ -213,6 +213,45 @@ gt(ci_discount) |>
   tab_header(title = "95% Confidence Intervals for Line Revenue")
 ```
 
-This confirms that the average line revenue is lower in discounted transactions.  
-While the absolute difference is relatively small, it is consistent across a large sample.  
+This confirms that the average line revenue is lower in discounted transactions.\
+While the absolute difference is relatively small, it is consistent across a large sample.\
 A regression model will be used in the next step to assess whether the difference is statistically significant.
+
+## Linear Regression Model
+
+To investigate which factors influence line-level revenue, a linear regression model was estimated using the formula:
+
+```r
+line_total ~ discount_applied + category + payment_method
+```
+
+### Data Preparation
+
+- Only transactions with a positive `line_total` were included  
+- Product information was joined for category assignment  
+- All relevant variables were converted to factors for modeling
+
+### Model Output
+
+```{r}
+summary(model_lm)
+```
+
+Key estimates (formatted with `broom` and `gt`):
+
+```{r}
+gt(tidy_model) |>
+  tab_header(title = "Regression Results: Line Revenue Model")
+```
+
+### Interpretation
+
+- **Discounts** significantly reduce line-level revenue (`−64.45` units on average)  
+- **Masculine** product categories are associated with a higher average revenue (`+21.43`)  
+- **Children** categories result in lower revenue compared to the baseline (`−20.74`)  
+- **Credit card payments** show a slight but significant increase (`+0.46`)  
+- The model explains **2.7% of the variance** in the outcome variable (`R² = 0.0271`)
+
+### Notes
+
+While the model's explanatory power is limited, the direction and significance of the coefficients support expected business patterns. The model can be extended or refined in future steps, such as interaction terms or log-transformed dependent variables.

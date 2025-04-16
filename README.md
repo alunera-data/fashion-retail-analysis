@@ -137,6 +137,35 @@ Whether this difference is statistically significant will be examined further in
 
 ---
 
+## 📉 Linear Regression Model
+
+In `05_model_lm.R`, a linear regression model was estimated to identify factors influencing the line-level revenue (`line_total`). The goal was to quantify the effect of discounts, product categories, and payment methods.
+
+### Model formula:
+
+```r
+line_total ~ discount_applied + category + payment_method
+```
+
+The model was built using over 6 million transaction records. To ensure interpretability, only transactions with positive `line_total` were included.
+
+### Key findings:
+
+| Term                         | Effect                       | Interpretation                                 |
+|------------------------------|-------------------------------|------------------------------------------------|
+| `discount_appliedYes`        | −64.45                        | Discounts reduce average revenue significantly |
+| `categoryMasculine`          | +21.43                        | Higher revenue compared to baseline category   |
+| `categoryChildren`           | −20.74                        | Lower revenue for children's products          |
+| `payment_methodCredit Card`  | +0.46                         | Slight positive effect vs. baseline method     |
+
+- All predictors were statistically significant (**p < 0.05**)  
+- The model explains approximately **2.7%** of the variance in line revenue (`R² = 0.0271`)  
+- Output was formatted using the `broom` and `gt` packages
+
+The results confirm the intuitive assumption that discounts reduce unit revenue and that product categories play a substantial role. The model provides a first approximation and will be extended or evaluated further if needed.
+
+---
+
 ## 💻 Requirements
 
 - **R 4.4 or newer**  
