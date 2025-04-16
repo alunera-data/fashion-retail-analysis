@@ -1,5 +1,5 @@
 ---
-title: "Gender Pay Gap in Switzerland"
+title: "Fashion Retail Analysis"
 author: "Yvonne Kirschler"
 format: html
 editor: visual
@@ -7,5 +7,45 @@ editor: visual
 
 ```{r setup, include=FALSE}
 library(tidyverse)
-library(ggplot2)
+library(janitor)
 library(gt)
+library(broom)
+library(glue)
+library(skimr)
+```
+
+# Background
+
+The global fashion industry is shaped by growing competition, changing consumer behavior, and increasing data availability.\
+Retail store networks are an essential part of most fashion brands, yet their success depends on many factors – such as location, store type, founding year, brand strength, or discount strategies.
+
+This project explores how these characteristics affect store performance using a simulated dataset of over 60,000 global transactions.
+
+------------------------------------------------------------------------
+
+# Research Questions
+
+What factors drive store performance in global fashion retail?
+
+In particular, this analysis investigates:
+
+-   Differences in store performance by country, brand, and founding year
+-   Performance variations across store types and categories
+-   The impact of discounts on store-level revenue
+-   Relationships identifiable through statistical models
+
+The analysis is conducted in **R** using **Quarto**, **ggplot2**, **linear regression**, and **confidence intervals** via `qnorm()` for statistical interpretation.
+
+## Dataset Overview
+
+The project uses a synthetic, but highly realistic dataset simulating global fashion retail operations.\
+It includes 6 interrelated CSV files:
+
+-   **transactions.csv** (6.4 million rows): Line-level transactions with price, quantity, discount, product, customer, employee and store reference
+-   **customers.csv** (1.6 million): Demographic customer data
+-   **products.csv**: Product IDs, categories and multilingual descriptions
+-   **stores.csv**: Locations, sizes and geospatial data of stores
+-   **employees.csv**: Employee assignments and roles
+-   **discounts.csv**: Structured promotional campaign information
+
+All data is loaded locally and not shared in the repository.

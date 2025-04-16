@@ -59,16 +59,32 @@ data/fashion_retail.csv
 
 ---
 
-## 📈 Key Results (Example – Placeholder)
+## 📈 Dataset Overview and Key Results (Preview)
 
-| Element                | Description                                         |
-|------------------------|-----------------------------------------------------|
-| Sample size            | ~60,000 stores across 90+ countries                 |
-| Main metric            | Store count per country / brand                     |
-| CI coverage            | 95 % using `qnorm()`                                |
-| Regression             | Store count ~ Brand + Year + Continent              |
-| Visual types           | Choropleth maps, Barplots, Line plots, Boxplots     |
-| Table format           | `gt` table, formatted in Quarto report              |
+| Dataset             | Rows       | Description                                      |
+|---------------------|------------|--------------------------------------------------|
+| `transactions.csv`  | 6,416,827  | Line-level transactions with products, prices, discounts, and timestamps |
+| `customers.csv`     | 1,643,306  | Customer profiles incl. demographics and location |
+| `products.csv`      | 17,940     | Products with multilingual descriptions and pricing |
+| `stores.csv`        | 35         | Global store locations incl. geo-coordinates     |
+| `employees.csv`     | 404        | Employees with role and store assignment         |
+| `discounts.csv`     | 181        | Time-based promotions by category and sub-category |
+
+---
+
+| Element               | Description                                           |
+|------------------------|-------------------------------------------------------|
+| Sample size            | >6.4 million transactions, 1.6 million customers       |
+| Focus                  | Store-level performance and revenue influencers        |
+| Regression             | Revenue ~ Store Type + Year + Discount + Country      |
+| CI usage               | Confidence intervals on revenue per store category     |
+| Visual types           | Barplots, Boxplots, Line plots, Density plots          |
+| Table format           | Clean summary tables created using `gt`               |
+
+---
+
+📊 This project demonstrates how transactional and categorical data from global fashion retail can be combined to gain insights into store performance, pricing effects, and customer behavior.  
+It is designed to meet the requirements of the NDK HF Transferarbeit and follows edX reproducibility standards (Quarto, R, `.qmd`, `.html`, local CSVs).
 
 ---
 
