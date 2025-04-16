@@ -84,17 +84,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Navigation</h2>
    
   <ul class="collapse">
-  <li><a href="#research-question" id="toc-research-question" class="nav-link active" data-scroll-target="#research-question"><span class="header-section-number">1</span> 🔍 Research Question</a></li>
-  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">2</span> 🌍 Background</a></li>
-  <li><a href="#dataset-overview" id="toc-dataset-overview" class="nav-link" data-scroll-target="#dataset-overview"><span class="header-section-number">3</span> 📦 Dataset Overview</a></li>
-  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation"><span class="header-section-number">4</span> 🧹 Data Preparation</a></li>
-  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis"><span class="header-section-number">5</span> 📊 Exploratory Data Analysis</a></li>
-  <li><a href="#confidence-interval-with-qnorm" id="toc-confidence-interval-with-qnorm" class="nav-link" data-scroll-target="#confidence-interval-with-qnorm"><span class="header-section-number">6</span> 🔢 Confidence Interval with <code>qnorm()</code> ✅</a></li>
-  <li><a href="#linear-regression-model" id="toc-linear-regression-model" class="nav-link" data-scroll-target="#linear-regression-model"><span class="header-section-number">7</span> 📈 Linear Regression Model ✅</a></li>
-  <li><a href="#summary-tables" id="toc-summary-tables" class="nav-link" data-scroll-target="#summary-tables"><span class="header-section-number">8</span> 📋 Summary Tables ✅</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">9</span> ✅ Conclusion</a></li>
+  <li><a href="#research-question" id="toc-research-question" class="nav-link active" data-scroll-target="#research-question"><span class="header-section-number">1</span> Research Question</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">2</span> Background</a></li>
+  <li><a href="#dataset-overview" id="toc-dataset-overview" class="nav-link" data-scroll-target="#dataset-overview"><span class="header-section-number">3</span> Dataset Overview</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation"><span class="header-section-number">4</span> Data Preparation</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis"><span class="header-section-number">5</span> Exploratory Data Analysis</a></li>
+  <li><a href="#confidence-interval-with-qnorm" id="toc-confidence-interval-with-qnorm" class="nav-link" data-scroll-target="#confidence-interval-with-qnorm"><span class="header-section-number">6</span> Confidence Interval with <code>qnorm()</code></a></li>
+  <li><a href="#linear-regression-model" id="toc-linear-regression-model" class="nav-link" data-scroll-target="#linear-regression-model"><span class="header-section-number">7</span> Linear Regression Model</a></li>
+  <li><a href="#summary-tables" id="toc-summary-tables" class="nav-link" data-scroll-target="#summary-tables"><span class="header-section-number">8</span> Summary Tables</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">9</span> Conclusion</a></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="fashion-retail-analysis.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
@@ -138,13 +138,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><em>All analyses were conducted using R (≥ 4.4) and rendered with Quarto.<br>
-The full code is visible and reproducible, meeting the official requirements of the NDK HF Transfer Project.</em></p>
+<p><em>All analyses were performed using R (≥ 4.4) and rendered with Quarto.<br>
+All code is visible and fully reproducible in accordance with the NDK HF guidelines.</em></p>
+<blockquote class="blockquote">
+<p><em>This report was written independently. ChatGPT (OpenAI) was used as a tool to assist with structure, phrasing, and quality control.<br>
+All analysis, implementation, and interpretation were conducted entirely by the author.</em></p>
+</blockquote>
 <section id="research-question" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="research-question"><span class="header-section-number">1</span> 🔍 Research Question</h2>
+<h2 data-number="1" class="anchored" data-anchor-id="research-question"><span class="header-section-number">1</span> Research Question</h2>
 <blockquote class="blockquote">
 <p><strong>Which factors influence the revenue per transaction in fashion retail?</strong></p>
-<p>This analysis investigates: - Whether discounts reduce average line revenue<br>
+<p>This analysis investigates:</p>
+<p>- Whether discounts reduce average line revenue<br>
 - How product categories affect sales<br>
 - Whether payment method makes a measurable difference<br>
 - How statistical tools can validate observed effects</p>
@@ -152,14 +157,14 @@ The full code is visible and reproducible, meeting the official requirements of 
 <hr>
 </section>
 <section id="background" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="background"><span class="header-section-number">2</span> 🌍 Background</h2>
+<h2 data-number="2" class="anchored" data-anchor-id="background"><span class="header-section-number">2</span> Background</h2>
 <p>This report is based on a simulated dataset that realistically reflects international fashion retail operations.<br>
 The goal is to analyze which factors affect transaction revenue – such as discounts, product type or payment method.<br>
 Statistical methods like confidence intervals and linear regression help make these effects interpretable.</p>
 <hr>
 </section>
 <section id="dataset-overview" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="dataset-overview"><span class="header-section-number">3</span> 📦 Dataset Overview</h2>
+<h2 data-number="3" class="anchored" data-anchor-id="dataset-overview"><span class="header-section-number">3</span> Dataset Overview</h2>
 <p>The dataset includes six structured CSV files:</p>
 <ul>
 <li><code>transactions.csv</code>: Line-level transactions (6.4 million rows)<br>
@@ -178,7 +183,7 @@ Statistical methods like confidence intervals and linear regression help make th
 <hr>
 </section>
 <section id="data-preparation" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">4</span> 🧹 Data Preparation</h2>
+<h2 data-number="4" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">4</span> Data Preparation</h2>
 <p>We begin by loading and preparing the datasets:</p>
 <ul>
 <li>Read all CSVs and clean column names (<code>janitor::clean_names()</code>)<br>
@@ -282,7 +287,7 @@ dbl (2): Employee ID, Store ID
 </details>
 </div>
 <section id="missing-values" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="missing-values"><span class="header-section-number">4.1</span> 🧭 Missing Values</h3>
+<h3 data-number="4.1" class="anchored" data-anchor-id="missing-values"><span class="header-section-number">4.1</span> Missing Values</h3>
 <p>We check for missing values across all relevant datasets.<br>
 This helps prevent errors or distortions in downstream calculations.</p>
 <div class="cell">
@@ -299,10 +304,10 @@ This helps prevent errors or distortions in downstream calculations.</p>
 </section>
 </section>
 <section id="exploratory-data-analysis" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">5</span> 📊 Exploratory Data Analysis</h2>
+<h2 data-number="5" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">5</span> Exploratory Data Analysis</h2>
 <p>A first visual inspection of the data reveals potential revenue drivers and relationships.</p>
 <section id="top-10-stores-by-revenue" class="level3" data-number="5.1">
-<h3 data-number="5.1" class="anchored" data-anchor-id="top-10-stores-by-revenue"><span class="header-section-number">5.1</span> 🏬 Top 10 Stores by Revenue</h3>
+<h3 data-number="5.1" class="anchored" data-anchor-id="top-10-stores-by-revenue"><span class="header-section-number">5.1</span> Top 10 Stores by Revenue</h3>
 <p>This visualization shows which stores generated the highest total revenue.<br>
 Store IDs are used as labels for readability.</p>
 <div class="cell">
@@ -331,7 +336,7 @@ Store IDs are used as labels for readability.</p>
 </div>
 </section>
 <section id="revenue-over-time" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="revenue-over-time"><span class="header-section-number">5.2</span> 📈 Revenue Over Time</h3>
+<h3 data-number="5.2" class="anchored" data-anchor-id="revenue-over-time"><span class="header-section-number">5.2</span> Revenue Over Time</h3>
 <p>We examine revenue trends over time.<br>
 Monthly totals are calculated and visualized as a line chart.</p>
 <div class="cell">
@@ -357,7 +362,7 @@ Monthly totals are calculated and visualized as a line chart.</p>
 </div>
 </section>
 <section id="revenue-by-product-category" class="level3" data-number="5.3">
-<h3 data-number="5.3" class="anchored" data-anchor-id="revenue-by-product-category"><span class="header-section-number">5.3</span> 🧾 Revenue by Product Category</h3>
+<h3 data-number="5.3" class="anchored" data-anchor-id="revenue-by-product-category"><span class="header-section-number">5.3</span> Revenue by Product Category</h3>
 <p>We compare average line revenue across different product categories.<br>
 This helps identify high- and low-performing groups.</p>
 <div class="cell">
@@ -385,7 +390,7 @@ This helps identify high- and low-performing groups.</p>
 </div>
 </section>
 <section id="revenue-distribution-discount-vs.-no-discount" class="level3" data-number="5.4">
-<h3 data-number="5.4" class="anchored" data-anchor-id="revenue-distribution-discount-vs.-no-discount"><span class="header-section-number">5.4</span> 💳 Revenue Distribution: Discount vs.&nbsp;No Discount</h3>
+<h3 data-number="5.4" class="anchored" data-anchor-id="revenue-distribution-discount-vs.-no-discount"><span class="header-section-number">5.4</span> Revenue Distribution: Discount vs.&nbsp;No Discount</h3>
 <p>A boxplot compares the spread of revenue between discounted and non-discounted transactions.<br>
 The Y-axis is log-transformed to better visualize outliers and ranges.</p>
 <div class="cell">
@@ -410,7 +415,7 @@ The Y-axis is log-transformed to better visualize outliers and ranges.</p>
 </section>
 </section>
 <section id="confidence-interval-with-qnorm" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="confidence-interval-with-qnorm"><span class="header-section-number">6</span> 🔢 Confidence Interval with <code>qnorm()</code> ✅</h2>
+<h2 data-number="6" class="anchored" data-anchor-id="confidence-interval-with-qnorm"><span class="header-section-number">6</span> Confidence Interval with <code>qnorm()</code></h2>
 <p>To meet the statistical requirements, we demonstrate how to compute confidence intervals using <code>qnorm()</code>.<br>
 This is the standard approach for estimating confidence ranges around a sample mean:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), mean, sd <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -432,23 +437,23 @@ This is the standard approach for estimating confidence ranges around a sample m
 <span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="robxdegmus" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#robxdegmus table {
+<div id="zmjafvaecn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zmjafvaecn table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#robxdegmus thead, #robxdegmus tbody, #robxdegmus tfoot, #robxdegmus tr, #robxdegmus td, #robxdegmus th {
+#zmjafvaecn thead, #zmjafvaecn tbody, #zmjafvaecn tfoot, #zmjafvaecn tr, #zmjafvaecn td, #zmjafvaecn th {
   border-style: none;
 }
 
-#robxdegmus p {
+#zmjafvaecn p {
   margin: 0;
   padding: 0;
 }
 
-#robxdegmus .gt_table {
+#zmjafvaecn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -474,12 +479,12 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-left-color: #D3D3D3;
 }
 
-#robxdegmus .gt_caption {
+#zmjafvaecn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#robxdegmus .gt_title {
+#zmjafvaecn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -491,7 +496,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-bottom-width: 0;
 }
 
-#robxdegmus .gt_subtitle {
+#zmjafvaecn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -503,7 +508,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-top-width: 0;
 }
 
-#robxdegmus .gt_heading {
+#zmjafvaecn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -515,13 +520,13 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-right-color: #D3D3D3;
 }
 
-#robxdegmus .gt_bottom_border {
+#zmjafvaecn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#robxdegmus .gt_col_headings {
+#zmjafvaecn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -536,7 +541,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-right-color: #D3D3D3;
 }
 
-#robxdegmus .gt_col_heading {
+#zmjafvaecn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -556,7 +561,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   overflow-x: hidden;
 }
 
-#robxdegmus .gt_column_spanner_outer {
+#zmjafvaecn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -568,15 +573,15 @@ This is the standard approach for estimating confidence ranges around a sample m
   padding-right: 4px;
 }
 
-#robxdegmus .gt_column_spanner_outer:first-child {
+#zmjafvaecn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#robxdegmus .gt_column_spanner_outer:last-child {
+#zmjafvaecn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#robxdegmus .gt_column_spanner {
+#zmjafvaecn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -588,11 +593,11 @@ This is the standard approach for estimating confidence ranges around a sample m
   width: 100%;
 }
 
-#robxdegmus .gt_spanner_row {
+#zmjafvaecn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#robxdegmus .gt_group_heading {
+#zmjafvaecn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -618,7 +623,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   text-align: left;
 }
 
-#robxdegmus .gt_empty_group_heading {
+#zmjafvaecn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -633,15 +638,15 @@ This is the standard approach for estimating confidence ranges around a sample m
   vertical-align: middle;
 }
 
-#robxdegmus .gt_from_md > :first-child {
+#zmjafvaecn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#robxdegmus .gt_from_md > :last-child {
+#zmjafvaecn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#robxdegmus .gt_row {
+#zmjafvaecn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -660,7 +665,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   overflow-x: hidden;
 }
 
-#robxdegmus .gt_stub {
+#zmjafvaecn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -673,7 +678,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   padding-right: 5px;
 }
 
-#robxdegmus .gt_stub_row_group {
+#zmjafvaecn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -687,15 +692,15 @@ This is the standard approach for estimating confidence ranges around a sample m
   vertical-align: top;
 }
 
-#robxdegmus .gt_row_group_first td {
+#zmjafvaecn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#robxdegmus .gt_row_group_first th {
+#zmjafvaecn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#robxdegmus .gt_summary_row {
+#zmjafvaecn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -705,16 +710,16 @@ This is the standard approach for estimating confidence ranges around a sample m
   padding-right: 5px;
 }
 
-#robxdegmus .gt_first_summary_row {
+#zmjafvaecn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#robxdegmus .gt_first_summary_row.thick {
+#zmjafvaecn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#robxdegmus .gt_last_summary_row {
+#zmjafvaecn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -724,7 +729,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-bottom-color: #D3D3D3;
 }
 
-#robxdegmus .gt_grand_summary_row {
+#zmjafvaecn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -734,7 +739,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   padding-right: 5px;
 }
 
-#robxdegmus .gt_first_grand_summary_row {
+#zmjafvaecn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -744,7 +749,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-top-color: #D3D3D3;
 }
 
-#robxdegmus .gt_last_grand_summary_row_top {
+#zmjafvaecn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -754,11 +759,11 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-bottom-color: #D3D3D3;
 }
 
-#robxdegmus .gt_striped {
+#zmjafvaecn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#robxdegmus .gt_table_body {
+#zmjafvaecn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -767,7 +772,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-bottom-color: #D3D3D3;
 }
 
-#robxdegmus .gt_footnotes {
+#zmjafvaecn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -781,7 +786,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-right-color: #D3D3D3;
 }
 
-#robxdegmus .gt_footnote {
+#zmjafvaecn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -790,7 +795,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   padding-right: 5px;
 }
 
-#robxdegmus .gt_sourcenotes {
+#zmjafvaecn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -804,7 +809,7 @@ This is the standard approach for estimating confidence ranges around a sample m
   border-right-color: #D3D3D3;
 }
 
-#robxdegmus .gt_sourcenote {
+#zmjafvaecn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -812,72 +817,72 @@ This is the standard approach for estimating confidence ranges around a sample m
   padding-right: 5px;
 }
 
-#robxdegmus .gt_left {
+#zmjafvaecn .gt_left {
   text-align: left;
 }
 
-#robxdegmus .gt_center {
+#zmjafvaecn .gt_center {
   text-align: center;
 }
 
-#robxdegmus .gt_right {
+#zmjafvaecn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#robxdegmus .gt_font_normal {
+#zmjafvaecn .gt_font_normal {
   font-weight: normal;
 }
 
-#robxdegmus .gt_font_bold {
+#zmjafvaecn .gt_font_bold {
   font-weight: bold;
 }
 
-#robxdegmus .gt_font_italic {
+#zmjafvaecn .gt_font_italic {
   font-style: italic;
 }
 
-#robxdegmus .gt_super {
+#zmjafvaecn .gt_super {
   font-size: 65%;
 }
 
-#robxdegmus .gt_footnote_marks {
+#zmjafvaecn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#robxdegmus .gt_asterisk {
+#zmjafvaecn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#robxdegmus .gt_indent_1 {
+#zmjafvaecn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#robxdegmus .gt_indent_2 {
+#zmjafvaecn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#robxdegmus .gt_indent_3 {
+#zmjafvaecn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#robxdegmus .gt_indent_4 {
+#zmjafvaecn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#robxdegmus .gt_indent_5 {
+#zmjafvaecn .gt_indent_5 {
   text-indent: 25px;
 }
 
-#robxdegmus .katex-display {
+#zmjafvaecn .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#robxdegmus div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#zmjafvaecn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -922,7 +927,7 @@ This is the standard approach for estimating confidence ranges around a sample m
 <hr>
 </section>
 <section id="linear-regression-model" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="linear-regression-model"><span class="header-section-number">7</span> 📈 Linear Regression Model ✅</h2>
+<h2 data-number="7" class="anchored" data-anchor-id="linear-regression-model"><span class="header-section-number">7</span> Linear Regression Model</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -976,23 +981,23 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decimals =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fcqapoeduc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fcqapoeduc table {
+<div id="xkrlnrnzrc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xkrlnrnzrc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#fcqapoeduc thead, #fcqapoeduc tbody, #fcqapoeduc tfoot, #fcqapoeduc tr, #fcqapoeduc td, #fcqapoeduc th {
+#xkrlnrnzrc thead, #xkrlnrnzrc tbody, #xkrlnrnzrc tfoot, #xkrlnrnzrc tr, #xkrlnrnzrc td, #xkrlnrnzrc th {
   border-style: none;
 }
 
-#fcqapoeduc p {
+#xkrlnrnzrc p {
   margin: 0;
   padding: 0;
 }
 
-#fcqapoeduc .gt_table {
+#xkrlnrnzrc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1018,12 +1023,12 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_caption {
+#xkrlnrnzrc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#fcqapoeduc .gt_title {
+#xkrlnrnzrc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1035,7 +1040,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-bottom-width: 0;
 }
 
-#fcqapoeduc .gt_subtitle {
+#xkrlnrnzrc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1047,7 +1052,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-top-width: 0;
 }
 
-#fcqapoeduc .gt_heading {
+#xkrlnrnzrc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1059,13 +1064,13 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_bottom_border {
+#xkrlnrnzrc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_col_headings {
+#xkrlnrnzrc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1080,7 +1085,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_col_heading {
+#xkrlnrnzrc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1100,7 +1105,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   overflow-x: hidden;
 }
 
-#fcqapoeduc .gt_column_spanner_outer {
+#xkrlnrnzrc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1112,15 +1117,15 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 4px;
 }
 
-#fcqapoeduc .gt_column_spanner_outer:first-child {
+#xkrlnrnzrc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fcqapoeduc .gt_column_spanner_outer:last-child {
+#xkrlnrnzrc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fcqapoeduc .gt_column_spanner {
+#xkrlnrnzrc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1132,11 +1137,11 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   width: 100%;
 }
 
-#fcqapoeduc .gt_spanner_row {
+#xkrlnrnzrc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#fcqapoeduc .gt_group_heading {
+#xkrlnrnzrc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1162,7 +1167,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   text-align: left;
 }
 
-#fcqapoeduc .gt_empty_group_heading {
+#xkrlnrnzrc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1177,15 +1182,15 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   vertical-align: middle;
 }
 
-#fcqapoeduc .gt_from_md > :first-child {
+#xkrlnrnzrc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fcqapoeduc .gt_from_md > :last-child {
+#xkrlnrnzrc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fcqapoeduc .gt_row {
+#xkrlnrnzrc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1204,7 +1209,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   overflow-x: hidden;
 }
 
-#fcqapoeduc .gt_stub {
+#xkrlnrnzrc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1217,7 +1222,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#fcqapoeduc .gt_stub_row_group {
+#xkrlnrnzrc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1231,15 +1236,15 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   vertical-align: top;
 }
 
-#fcqapoeduc .gt_row_group_first td {
+#xkrlnrnzrc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fcqapoeduc .gt_row_group_first th {
+#xkrlnrnzrc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#fcqapoeduc .gt_summary_row {
+#xkrlnrnzrc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1249,16 +1254,16 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#fcqapoeduc .gt_first_summary_row {
+#xkrlnrnzrc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_first_summary_row.thick {
+#xkrlnrnzrc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fcqapoeduc .gt_last_summary_row {
+#xkrlnrnzrc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1268,7 +1273,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_grand_summary_row {
+#xkrlnrnzrc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1278,7 +1283,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#fcqapoeduc .gt_first_grand_summary_row {
+#xkrlnrnzrc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1288,7 +1293,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_last_grand_summary_row_top {
+#xkrlnrnzrc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1298,11 +1303,11 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_striped {
+#xkrlnrnzrc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fcqapoeduc .gt_table_body {
+#xkrlnrnzrc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1311,7 +1316,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_footnotes {
+#xkrlnrnzrc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1325,7 +1330,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_footnote {
+#xkrlnrnzrc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1334,7 +1339,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#fcqapoeduc .gt_sourcenotes {
+#xkrlnrnzrc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1348,7 +1353,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fcqapoeduc .gt_sourcenote {
+#xkrlnrnzrc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1356,72 +1361,72 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#fcqapoeduc .gt_left {
+#xkrlnrnzrc .gt_left {
   text-align: left;
 }
 
-#fcqapoeduc .gt_center {
+#xkrlnrnzrc .gt_center {
   text-align: center;
 }
 
-#fcqapoeduc .gt_right {
+#xkrlnrnzrc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fcqapoeduc .gt_font_normal {
+#xkrlnrnzrc .gt_font_normal {
   font-weight: normal;
 }
 
-#fcqapoeduc .gt_font_bold {
+#xkrlnrnzrc .gt_font_bold {
   font-weight: bold;
 }
 
-#fcqapoeduc .gt_font_italic {
+#xkrlnrnzrc .gt_font_italic {
   font-style: italic;
 }
 
-#fcqapoeduc .gt_super {
+#xkrlnrnzrc .gt_super {
   font-size: 65%;
 }
 
-#fcqapoeduc .gt_footnote_marks {
+#xkrlnrnzrc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#fcqapoeduc .gt_asterisk {
+#xkrlnrnzrc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fcqapoeduc .gt_indent_1 {
+#xkrlnrnzrc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#fcqapoeduc .gt_indent_2 {
+#xkrlnrnzrc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#fcqapoeduc .gt_indent_3 {
+#xkrlnrnzrc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#fcqapoeduc .gt_indent_4 {
+#xkrlnrnzrc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#fcqapoeduc .gt_indent_5 {
+#xkrlnrnzrc .gt_indent_5 {
   text-indent: 25px;
 }
 
-#fcqapoeduc .katex-display {
+#xkrlnrnzrc .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#fcqapoeduc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xkrlnrnzrc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1484,7 +1489,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
 <hr>
 </section>
 <section id="summary-tables" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="summary-tables"><span class="header-section-number">8</span> 📋 Summary Tables ✅</h2>
+<h2 data-number="8" class="anchored" data-anchor-id="summary-tables"><span class="header-section-number">8</span> Summary Tables</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1501,23 +1506,23 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="lcghsvwtsn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lcghsvwtsn table {
+<div id="qhnpbldsdy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qhnpbldsdy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#lcghsvwtsn thead, #lcghsvwtsn tbody, #lcghsvwtsn tfoot, #lcghsvwtsn tr, #lcghsvwtsn td, #lcghsvwtsn th {
+#qhnpbldsdy thead, #qhnpbldsdy tbody, #qhnpbldsdy tfoot, #qhnpbldsdy tr, #qhnpbldsdy td, #qhnpbldsdy th {
   border-style: none;
 }
 
-#lcghsvwtsn p {
+#qhnpbldsdy p {
   margin: 0;
   padding: 0;
 }
 
-#lcghsvwtsn .gt_table {
+#qhnpbldsdy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1543,12 +1548,12 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_caption {
+#qhnpbldsdy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#lcghsvwtsn .gt_title {
+#qhnpbldsdy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1560,7 +1565,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-bottom-width: 0;
 }
 
-#lcghsvwtsn .gt_subtitle {
+#qhnpbldsdy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1572,7 +1577,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-top-width: 0;
 }
 
-#lcghsvwtsn .gt_heading {
+#qhnpbldsdy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1584,13 +1589,13 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_bottom_border {
+#qhnpbldsdy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_col_headings {
+#qhnpbldsdy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1605,7 +1610,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_col_heading {
+#qhnpbldsdy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1625,7 +1630,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   overflow-x: hidden;
 }
 
-#lcghsvwtsn .gt_column_spanner_outer {
+#qhnpbldsdy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1637,15 +1642,15 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 4px;
 }
 
-#lcghsvwtsn .gt_column_spanner_outer:first-child {
+#qhnpbldsdy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lcghsvwtsn .gt_column_spanner_outer:last-child {
+#qhnpbldsdy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lcghsvwtsn .gt_column_spanner {
+#qhnpbldsdy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1657,11 +1662,11 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   width: 100%;
 }
 
-#lcghsvwtsn .gt_spanner_row {
+#qhnpbldsdy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#lcghsvwtsn .gt_group_heading {
+#qhnpbldsdy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1687,7 +1692,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   text-align: left;
 }
 
-#lcghsvwtsn .gt_empty_group_heading {
+#qhnpbldsdy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1702,15 +1707,15 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   vertical-align: middle;
 }
 
-#lcghsvwtsn .gt_from_md > :first-child {
+#qhnpbldsdy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lcghsvwtsn .gt_from_md > :last-child {
+#qhnpbldsdy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lcghsvwtsn .gt_row {
+#qhnpbldsdy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1729,7 +1734,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   overflow-x: hidden;
 }
 
-#lcghsvwtsn .gt_stub {
+#qhnpbldsdy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1742,7 +1747,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#lcghsvwtsn .gt_stub_row_group {
+#qhnpbldsdy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1756,15 +1761,15 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   vertical-align: top;
 }
 
-#lcghsvwtsn .gt_row_group_first td {
+#qhnpbldsdy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#lcghsvwtsn .gt_row_group_first th {
+#qhnpbldsdy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#lcghsvwtsn .gt_summary_row {
+#qhnpbldsdy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1774,16 +1779,16 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#lcghsvwtsn .gt_first_summary_row {
+#qhnpbldsdy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_first_summary_row.thick {
+#qhnpbldsdy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#lcghsvwtsn .gt_last_summary_row {
+#qhnpbldsdy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1793,7 +1798,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_grand_summary_row {
+#qhnpbldsdy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1803,7 +1808,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#lcghsvwtsn .gt_first_grand_summary_row {
+#qhnpbldsdy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1813,7 +1818,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_last_grand_summary_row_top {
+#qhnpbldsdy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1823,11 +1828,11 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_striped {
+#qhnpbldsdy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lcghsvwtsn .gt_table_body {
+#qhnpbldsdy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1836,7 +1841,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_footnotes {
+#qhnpbldsdy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1850,7 +1855,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_footnote {
+#qhnpbldsdy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1859,7 +1864,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#lcghsvwtsn .gt_sourcenotes {
+#qhnpbldsdy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1873,7 +1878,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#lcghsvwtsn .gt_sourcenote {
+#qhnpbldsdy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1881,72 +1886,72 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
   padding-right: 5px;
 }
 
-#lcghsvwtsn .gt_left {
+#qhnpbldsdy .gt_left {
   text-align: left;
 }
 
-#lcghsvwtsn .gt_center {
+#qhnpbldsdy .gt_center {
   text-align: center;
 }
 
-#lcghsvwtsn .gt_right {
+#qhnpbldsdy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lcghsvwtsn .gt_font_normal {
+#qhnpbldsdy .gt_font_normal {
   font-weight: normal;
 }
 
-#lcghsvwtsn .gt_font_bold {
+#qhnpbldsdy .gt_font_bold {
   font-weight: bold;
 }
 
-#lcghsvwtsn .gt_font_italic {
+#qhnpbldsdy .gt_font_italic {
   font-style: italic;
 }
 
-#lcghsvwtsn .gt_super {
+#qhnpbldsdy .gt_super {
   font-size: 65%;
 }
 
-#lcghsvwtsn .gt_footnote_marks {
+#qhnpbldsdy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#lcghsvwtsn .gt_asterisk {
+#qhnpbldsdy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#lcghsvwtsn .gt_indent_1 {
+#qhnpbldsdy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#lcghsvwtsn .gt_indent_2 {
+#qhnpbldsdy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#lcghsvwtsn .gt_indent_3 {
+#qhnpbldsdy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#lcghsvwtsn .gt_indent_4 {
+#qhnpbldsdy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#lcghsvwtsn .gt_indent_5 {
+#qhnpbldsdy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#lcghsvwtsn .katex-display {
+#qhnpbldsdy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#lcghsvwtsn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#qhnpbldsdy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1982,7 +1987,7 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
 <hr>
 </section>
 <section id="conclusion" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">9</span> ✅ Conclusion</h2>
+<h2 data-number="9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">9</span> Conclusion</h2>
 <p>This analysis shows that line-level revenue in fashion retail is shaped by several statistically measurable factors:</p>
 <ul>
 <li><strong>Discounts</strong>: Transactions with discounts resulted in significantly lower revenue (approx. −64 CHF per line).<br>
