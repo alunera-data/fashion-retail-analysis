@@ -112,6 +112,31 @@ These values will be addressed during exploration or model preparation, dependin
 
 ---
 
+## 📏 Confidence Interval Calculation
+
+In `04_model_ci.R`, 95% confidence intervals were calculated to evaluate the mean line revenue for transactions with and without discounts. The method follows the standard approach using the normal distribution and `qnorm()`.
+
+First, the `qnorm()` function was applied exactly as required for theoretical demonstration:
+
+```r
+qnorm(c(0.025, 0.975), mean = 2, sd = 1.2)
+```
+
+This represents the confidence interval boundaries for a normally distributed variable with a mean of 2 and a standard deviation of 1.2.
+
+Subsequently, the mean and standard deviation of actual transaction data (e.g. for `discount_applied == "Yes"`) were used in the same formula:
+
+```r
+qnorm(c(0.025, 0.975), mean = mean_value, sd = sd_value / sqrt(n))
+```
+
+This method was applied to both groups (`Yes`/`No`) and output in a table format using the `gt` package.
+
+The resulting confidence intervals are narrow due to the large sample size (>1 million rows per group), but clearly show a lower mean line revenue for discounted transactions compared to full-price sales.  
+Whether this difference is statistically significant will be examined further in the regression step.
+
+---
+
 ## 💻 Requirements
 
 - **R 4.4 or newer**  
