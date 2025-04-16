@@ -80,11 +80,14 @@ data/fashion_retail.csv
 | CI usage               | Confidence intervals on revenue per store category     |
 | Visual types           | Barplots, Boxplots, Line plots, Density plots          |
 | Table format           | Clean summary tables created using `gt`               |
+| Label strategy         | Unicode-safe: plots use `Store {store_id}` as labels  |
 
 ---
 
-📊 This project demonstrates how transactional and categorical data from global fashion retail can be combined to gain insights into store performance, pricing effects, and customer behavior.  
-It is designed to meet the requirements of the NDK HF Transferarbeit and follows edX reproducibility standards (Quarto, R, `.qmd`, `.html`, local CSVs).
+📊 This project demonstrates how transactional and categorical data from global fashion retail  
+can be combined to gain insights into store performance, pricing effects, and customer behavior.  
+It is designed to meet the requirements of the NDK HF Transferarbeit and follows edX reproducibility standards  
+(Quarto, R, `.qmd`, `.html`, local CSVs).
 
 ---
 

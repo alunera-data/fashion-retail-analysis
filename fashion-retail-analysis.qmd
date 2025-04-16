@@ -76,3 +76,106 @@ sapply(list(
 | `discounts`      | 20             |
 
 The decision on how to handle these values will be made contextually in the relevant analysis steps (e.g. filtering, imputation, or exclusion).
+
+## Exploratory Data Analysis (EDA)
+
+In this phase, we explored the main transactional and categorical structures of the dataset  
+to identify patterns and revenue drivers.
+
+### 1. Top 10 Stores by Total Revenue
+
+To avoid encoding issues with multilingual store names,  
+we used the store ID (`store_id`) as the primary label in visualizations.
+
+```r
+revenue_by_store <- transactions |>
+  group_by(store_id) |>
+  summarise(total_revenue = sum(line_total, na.rm = TRUE)) |>
+  arrange(desc(total_revenue)) |>
+  slice_head(n = 10) |>
+  mutate(store_label = paste("Store", store_id))
+
+ggplot(revenue_by_store, aes(x = fct_reorder(store_label, total_revenue), y = total_revenue)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::label_comma()) +
+  labs(
+    title = "Top 10 Stores by Total Revenue",
+    x = "Store ID",
+    y = "Total Revenue"
+  )
+```
+
+### 2. Revenue Over Time
+
+```r
+transactions_by_month <- transactions |>
+  mutate(month = floor_date(date, unit = "month")) |>
+  group_by(month) |>
+  summarise(total_revenue = sum(line_total, na.rm = TRUE))
+
+ggplot(transactions_by_month, aes(x = month, y = total_revenue)) +
+  geom_line(color = "darkgreen", linewidth = 1) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(
+    title = "Monthly Revenue Over Time",
+    x = "Month",
+    y = "Revenue"
+  )
+```
+
+### 3. Revenue by Product Category
+
+```r
+revenue_by_category <- transactions |>
+  left_join(products, by = "product_id") |>
+  group_by(category) |>
+  summarise(avg_revenue = mean(line_total, na.rm = TRUE)) |>
+  arrange(desc(avg_revenue))
+
+ggplot(revenue_by_category, aes(x = fct_reorder(category, avg_revenue), y = avg_revenue)) +
+  geom_col(fill = "coral") +
+  coord_flip() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(
+    title = "Average Line Revenue by Product Category",
+    x = "Product Category",
+    y = "Average Line Revenue"
+  )
+```
+
+### 4. Revenue Distribution: Discount vs. No Discount
+
+```r
+transactions <- transactions |>
+  mutate(discount_applied = if_else(discount > 0, "Yes", "No"))
+
+transactions |>
+  filter(line_total > 0) |>  # filter out zero and negative values for log scale
+  ggplot(aes(x = discount_applied, y = line_total)) +
+  geom_boxplot(fill = "plum") +
+  scale_y_log10(labels = label_comma()) +
+  labs(
+    title = "Revenue Distribution by Discount Applied",
+    x = "Discount Applied",
+    y = "Line Total (log10)"
+  )
+```
+
+### 5. Summary Table: Discounted vs. Non-Discounted Transactions
+
+```r
+summary_discount <- transactions |>
+  group_by(discount_applied) |>
+  summarise(
+    n = n(),
+    avg_revenue = mean(line_total, na.rm = TRUE),
+    median_revenue = median(line_total, na.rm = TRUE)
+  ) |>
+  arrange(desc(avg_revenue))
+
+gt(summary_discount)
+```
+
+✔️ These exploratory results provide a strong foundation for modeling revenue dynamics  
+and evaluating pricing and discount strategies in the next steps.
