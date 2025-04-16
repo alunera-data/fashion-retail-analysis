@@ -49,3 +49,30 @@ It includes 6 interrelated CSV files:
 -   **discounts.csv**: Structured promotional campaign information
 
 All data is loaded locally and not shared in the repository.
+
+## Data Preparation
+
+All datasets were cleaned and harmonized using R. The following transformations were applied:
+
+- **Factor conversion** for IDs, categories and groupings (e.g. `store_id`, `gender`, `product_id`)
+- **Date conversion** for transaction dates, discount periods, and customer birthdates
+- **Column standardization** using `janitor::clean_names()` to ensure consistent naming
+- **Initial NA check** to assess missing value patterns
+
+```r
+sapply(list(
+  transactions = transactions,
+  products = products,
+  discounts = discounts
+), \(df) sum(is.na(df)))
+```
+
+### Missing Value Summary
+
+| Dataset         | Missing Values |
+|------------------|----------------|
+| `transactions`   | 4,763,885      |
+| `products`       | 14,515         |
+| `discounts`      | 20             |
+
+The decision on how to handle these values will be made contextually in the relevant analysis steps (e.g. filtering, imputation, or exclusion).

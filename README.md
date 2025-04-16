@@ -88,6 +88,27 @@ It is designed to meet the requirements of the NDK HF Transferarbeit and follows
 
 ---
 
+## 🧼 Data Cleaning & Preparation
+
+In `02_clean_transform.R`, all raw datasets were structurally transformed to ensure consistency and usability in later analyses:
+
+- Categorical variables such as `store_id`, `product_id`, `transaction_type`, and `gender` were converted to **factors**
+- Date columns like `date`, `date_of_birth`, `start`, and `end` were converted to **Date** class using `lubridate`
+- ID fields were converted to factors to support grouping operations
+- Column names were cleaned and standardized using `janitor::clean_names()`
+
+A quick NA check confirmed:
+
+| Dataset         | Missing Values |
+|------------------|----------------|
+| `transactions`   | 4,763,885      |
+| `products`       | 14,515         |
+| `discounts`      | 20             |
+
+These values will be addressed during exploration or model preparation, depending on their analytical relevance.
+
+---
+
 ## 💻 Requirements
 
 - **R 4.4 or newer**  
