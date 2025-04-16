@@ -3,16 +3,24 @@
 # File:    02_clean_transform.R
 # Author:  Yvonne Kirschler
 # Purpose: Clean and transform raw datasets for analysis
+#          Bereinigung und Transformation der Rohdaten für die Analyse
 # ─────────────────────────────────────────────────────────────
 
-# Load required packages
-library(tidyverse)
-library(janitor)
-library(lubridate)
+# ─────────────────────────────────────────────────────────────
+# STEP 1: Load required packages
+# Schritt 1: Notwendige R-Pakete laden
+# Load libraries needed for cleaning, transformation and date handling
+# Benötigte Pakete für Bereinigung, Umwandlung und Datumsverarbeitung laden
+# ─────────────────────────────────────────────────────────────
+library(tidyverse)   # Data wrangling and manipulation
+library(janitor)     # Clean column names
+library(lubridate)   # Convert and work with dates
 
 # ─────────────────────────────────────────────────────────────
-# Clean 'transactions' dataset
-# Convert IDs and categoricals to factors, ensure proper date format
+# STEP 2: Clean 'transactions' dataset
+# Schritt 2: Transaktionsdaten bereinigen
+# Convert all IDs and categorical variables to factors, parse date column
+# Alle IDs und kategorialen Spalten in Faktoren umwandeln, Datum formatieren
 # ─────────────────────────────────────────────────────────────
 transactions <- transactions |> 
   mutate(
@@ -26,7 +34,10 @@ transactions <- transactions |>
   )
 
 # ─────────────────────────────────────────────────────────────
-# Clean 'stores' dataset
+# STEP 3: Clean 'stores' dataset
+# Schritt 3: Store-Daten bereinigen
+# Factorize store-related fields and convert employee count to integer
+# Spalten als Faktor setzen, Mitarbeiterzahl in Ganzzahl umwandeln
 # ─────────────────────────────────────────────────────────────
 stores <- stores |> 
   mutate(
@@ -37,7 +48,10 @@ stores <- stores |>
   )
 
 # ─────────────────────────────────────────────────────────────
-# Clean 'customers' dataset
+# STEP 4: Clean 'customers' dataset
+# Schritt 4: Kundendaten bereinigen
+# Set customer ID and demographics as factors, convert date of birth
+# Kunden-ID und Demografie als Faktoren setzen, Geburtsdatum umwandeln
 # ─────────────────────────────────────────────────────────────
 customers <- customers |> 
   mutate(
@@ -49,7 +63,10 @@ customers <- customers |>
   )
 
 # ─────────────────────────────────────────────────────────────
-# Clean 'products' dataset
+# STEP 5: Clean 'products' dataset
+# Schritt 5: Produktdaten bereinigen
+# Factorize product ID, category and sub-category
+# Produkt-ID, Kategorie und Subkategorie als Faktoren setzen
 # ─────────────────────────────────────────────────────────────
 products <- products |> 
   mutate(
@@ -59,7 +76,10 @@ products <- products |>
   )
 
 # ─────────────────────────────────────────────────────────────
-# Clean 'discounts' dataset
+# STEP 6: Clean 'discounts' dataset
+# Schritt 6: Rabattdaten bereinigen
+# Convert discount categories to factors, format start and end dates
+# Rabatt-Kategorien als Faktoren setzen, Start- und Enddatum formatieren
 # ─────────────────────────────────────────────────────────────
 discounts <- discounts |> 
   mutate(
@@ -70,7 +90,10 @@ discounts <- discounts |>
   )
 
 # ─────────────────────────────────────────────────────────────
-# Clean 'employees' dataset
+# STEP 7: Clean 'employees' dataset
+# Schritt 7: Mitarbeiterdaten bereinigen
+# Convert employee ID and store ID to factors
+# Mitarbeiter- und Store-IDs als Faktoren setzen
 # ─────────────────────────────────────────────────────────────
 employees <- employees |> 
   mutate(
@@ -79,7 +102,10 @@ employees <- employees |>
   )
 
 # ─────────────────────────────────────────────────────────────
-# Quick NA check for main datasets (for transparency)
+# STEP 8: Check for missing values
+# Schritt 8: Fehlende Werte prüfen
+# Summarize the total number of NAs per selected dataset
+# Fehlende Werte pro Datensatz berechnen (für Transparenz)
 # ─────────────────────────────────────────────────────────────
 na_summary <- sapply(list(
   transactions = transactions,
@@ -90,7 +116,9 @@ na_summary <- sapply(list(
 print(na_summary)
 
 # ─────────────────────────────────────────────────────────────
-# Final confirmation
+# STEP 9: Confirm completion
+# Schritt 9: Bestätigung der Verarbeitung
+# Final confirmation that datasets are ready for analysis
+# Abschlieende Bestätigung der erfolgreichen Transformation
 # ─────────────────────────────────────────────────────────────
-cat("✔️ Datasets cleaned and transformed.\n")
-
+cat("✔️ Datasets cleaned and transformed. / Datensätze bereinigt und transformiert.\n")

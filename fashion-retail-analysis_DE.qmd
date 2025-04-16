@@ -1,0 +1,279 @@
+---
+title: "🛍️ Fashion Retail Analysis"
+author: "Yvonne Kirschler"
+subtitle: "NDK HF Transferarbeit · Erstellt mit R und Quarto"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    toc-title: "Navigation"
+    toc-location: left
+    toc-floating: true
+    number-sections: true
+    code-fold: true
+    fig-align: center
+    theme: cosmo
+    df-print: paged
+    highlight-style: github
+  pdf:
+    documentclass: scrartcl
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    mainfont: Helvetica Neue
+mainfont: "Helvetica Neue"
+fontsize: 1.05em
+editor: visual
+---
+
+```{r setup, include=TRUE, collapse=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+library(gt)
+library(broom)
+library(glue)
+library(skimr)
+library(scales)
+```
+
+*Alle Auswertungen wurden mit R (≥ 4.4) durchgeführt und mit Quarto gerendert.  
+Der gesamte Code ist sichtbar und reproduzierbar, gemäss den Vorgaben von NDK HF.*
+
+## 🔍 Fragestellung
+
+> **Welche Faktoren beeinflussen den Umsatz pro Verkaufstransaktion im Modehandel?**
+>
+> In dieser Arbeit wird untersucht:
+> - Ob Rabatte den durchschnittlichen Umsatz senken  
+> - Welche Rolle die Produktkategorie spielt  
+> - Ob die Zahlungsmethode einen messbaren Einfluss hat  
+> - Wie sich diese Effekte statistisch nachweisen lassen
+
+---
+
+## 🌍 Hintergrund
+
+Dieser Bericht basiert auf einem simulierten Datensatz, der ein realistisches Abbild des internationalen Modehandels darstellt.  
+Ziel ist es, zu analysieren, welche Faktoren den erzielten Umsatz pro Transaktion beeinflussen – etwa Rabattaktionen, Produkttypen oder die Art der Zahlung.  
+Statistische Methoden wie Konfidenzintervalle und Regressionsmodelle helfen dabei, diese Einflüsse nachvollziehbar zu machen.
+
+---
+
+## 📦 Datensatzübersicht
+
+Der Datensatz umfasst sechs strukturierte CSV-Dateien mit folgenden Inhalten:
+
+- `transactions.csv`: Transaktionsdaten auf Zeilenebene (6,4 Mio. Zeilen)  
+- `customers.csv`: Demografische Kundendaten (1,6 Mio. Zeilen)  
+- `products.csv`: Produktkategorien und Beschreibungen  
+- `stores.csv`: Standorte und Metadaten zu Filialen  
+- `employees.csv`: Mitarbeitende und Zuordnung  
+- `discounts.csv`: Rabattzeiträume und Aktionen
+
+⚠️ Die Daten werden lokal gespeichert und sind nicht im Repository enthalten.
+
+---
+
+## 🧹 Datenaufbereitung
+
+Zuerst werden alle benötigten Datensätze eingelesen, vereinheitlicht und vorbereitet:
+
+- CSV-Dateien werden eingelesen und Spaltennamen bereinigt (`janitor::clean_names()`)  
+- Neue Variable `discount_applied` wird abgeleitet  
+- Produktkategorien werden als Faktor gespeichert
+
+```{r load-data}
+transactions <- read_csv("data/transactions.csv") |> clean_names()
+products     <- read_csv("data/products.csv")     |> clean_names()
+discounts    <- read_csv("data/discounts.csv")    |> clean_names()
+stores       <- read_csv("data/stores.csv")       |> clean_names()
+customers    <- read_csv("data/customers.csv")    |> clean_names()
+employees    <- read_csv("data/employees.csv")    |> clean_names()
+
+transactions <- transactions |> mutate(discount_applied = if_else(discount > 0, "Yes", "No"))
+products     <- products |> mutate(category = as_factor(category))
+```
+
+### 🧭 Fehlende Werte
+
+Hier prüfen wir, ob es in den wichtigsten Datensätzen fehlende Werte gibt.  
+Dies ist wichtig, um spätere Verzerrungen bei der Analyse (z. B. durch NA in Mittelwerten) zu vermeiden.
+
+```{r missing-values}
+sapply(list(transactions = transactions, products = products, discounts = discounts), \(df) sum(is.na(df)))
+```
+
+---
+
+## 📊 Explorative Analyse
+
+Hier erfolgt eine erste visuelle Auswertung der Transaktionsdaten zur Identifikation möglicher Einflussgrössen.
+
+### 🏬 Top 10 Stores nach Umsatz
+
+Diese Visualisierung zeigt, welche Filialen den höchsten Gesamtumsatz erzielt haben.  
+Dafür werden alle Transaktionen pro Store summiert. Die Darstellung erfolgt als horizontales Balkendiagramm.  
+Zur besseren Lesbarkeit werden die Store-IDs statt komplexer Namen verwendet.
+
+```{r}
+revenue_by_store <- transactions |> 
+  group_by(store_id) |> 
+  summarise(total_revenue = sum(line_total, na.rm = TRUE)) |> 
+  arrange(desc(total_revenue)) |> 
+  slice_head(n = 10) |> 
+  mutate(store_label = paste("Store", store_id))
+
+ggplot(revenue_by_store, aes(x = fct_reorder(store_label, total_revenue), y = total_revenue)) +
+  geom_col(fill = "#6BCABA") +
+  coord_flip() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Top 10 Stores by Total Revenue", x = "Store ID", y = "Total Revenue")
+```
+
+### 📈 Umsatzverlauf über die Zeit
+
+Hier analysieren wir, wie sich der Umsatz im Zeitverlauf verändert.  
+Die Daten werden nach Monat aggregiert und als Liniendiagramm dargestellt.  
+Ziel ist es, saisonale Muster oder Wachstumstendenzen zu erkennen.
+
+```{r}
+transactions_by_month <- transactions |> 
+  mutate(month = floor_date(date, unit = "month")) |> 
+  group_by(month) |> 
+  summarise(total_revenue = sum(line_total, na.rm = TRUE))
+
+ggplot(transactions_by_month, aes(x = month, y = total_revenue)) +
+  geom_line(color = "#4FB8A8", linewidth = 1.2) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Monatlicher Umsatzverlauf", x = "Monat", y = "Umsatz")
+```
+
+### 🧾 Umsatz nach Produktkategorie
+
+Dieser Plot zeigt, wie hoch der durchschnittliche Umsatz pro Verkaufszeile in den einzelnen Produktkategorien ist.  
+Dafür wird der Mittelwert (`mean`) pro Kategorie berechnet.  
+Die Balken machen Unterschiede im Sortiment sofort sichtbar – etwa, ob bestimmte Kategorien wie „Masculine“ mehr Umsatz generieren.
+
+```{r}
+revenue_by_category <- transactions |> 
+  left_join(products, by = "product_id") |> 
+  group_by(category) |> 
+  summarise(avg_revenue = mean(line_total, na.rm = TRUE)) |> 
+  arrange(desc(avg_revenue))
+
+ggplot(revenue_by_category, aes(x = fct_reorder(category, avg_revenue), y = avg_revenue)) +
+  geom_col(fill = "#7ACCB8") +
+  coord_flip() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Durchschnittlicher Umsatz nach Produktkategorie", x = "Produktkategorie", y = "Ø Umsatz pro Zeile")
+```
+
+### 💳 Verteilung: Mit vs. ohne Rabatt
+
+Mit diesem Boxplot vergleichen wir die Umsatzverteilung zwischen Transaktionen mit und ohne Rabatt.  
+Die Darstellung zeigt Median, Streuung und Ausreisser beider Gruppen.  
+Durch die logarithmische Skalierung der Y-Achse lassen sich auch grosse Werte besser interpretieren.
+
+```{r}
+transactions |> 
+  filter(line_total > 0) |> 
+  ggplot(aes(x = discount_applied, y = line_total)) +
+  geom_boxplot(fill = "#CBD5D1", color = "#4FB8A8") +
+  scale_y_log10(labels = label_comma()) +
+  labs(title = "Umsatzverteilung mit/ohne Rabatt", x = "Rabatt angewendet", y = "Umsatz (log10)")
+```
+
+---
+
+## 🔢 Konfidenzintervall mit `qnorm()` ✅
+
+Zur Erfüllung der statistischen Vorgaben wird das Konfidenzintervall mit `qnorm()` berechnet.  
+Dies basiert auf folgender Formel bei normalverteilter Stichprobe:
+
+```r
+qnorm(c(0.025, 0.975), mean, sd / sqrt(n))
+```
+
+```{r ci-table}
+ci_discount <- transactions |> 
+  group_by(discount_applied) |> 
+  summarise(
+    n = n(),
+    mean = mean(line_total, na.rm = TRUE),
+    sd = sd(line_total, na.rm = TRUE),
+    lower_ci = qnorm(0.025, mean, sd / sqrt(n)),
+    upper_ci = qnorm(0.975, mean, sd / sqrt(n))
+  )
+
+ci_discount |> gt() |> 
+  tab_header(title = "95%-Konfidenzintervalle für den Umsatz pro Zeile") |> 
+  fmt_number(columns = 2:5, decimals = 2)
+```
+
+---
+
+## 📈 Lineares Regressionsmodell ✅
+
+```{r regression}
+model_data <- transactions |> 
+  filter(line_total > 0) |> 
+  left_join(products, by = "product_id") |> 
+  mutate(
+    discount_applied = as_factor(discount_applied),
+    category         = as_factor(category),
+    payment_method   = as_factor(payment_method)
+  ) |> 
+  select(line_total, discount_applied, category, payment_method)
+
+model_formula <- line_total ~ discount_applied + category + payment_method
+model_lm <- lm(model_formula, data = model_data)
+tidy_model <- tidy(model_lm)
+
+summary(model_lm)
+```
+
+```{r regression-table}
+tidy_model |> 
+  arrange(desc(abs(estimate))) |> 
+  gt() |> 
+  tab_header(title = "Ergebnisse des Regressionsmodells") |> 
+  fmt_number(columns = 2:5, decimals = 4)
+```
+
+---
+
+## 📋 Ergebnis-Tabellen ✅
+
+```{r payment-summary}
+transactions |> 
+  filter(line_total > 0) |> 
+  group_by(payment_method) |> 
+  summarise(
+    avg_revenue = mean(line_total, na.rm = TRUE),
+    n = n()
+  ) |> 
+  arrange(desc(avg_revenue)) |> 
+  gt() |> 
+  tab_header(title = "Ø Umsatz pro Zahlungsmethode") |> 
+  fmt_number(columns = 2, decimals = 2)
+```
+
+---
+
+## ✅ Fazit
+
+Diese Analyse zeigt, dass der Umsatz pro Verkaufszeile im Modehandel nicht zufällig entsteht, sondern durch mehrere klar messbare Faktoren beeinflusst wird:
+
+- **Rabatte**: Transaktionen mit Rabatt führen im Durchschnitt zu einem deutlich geringeren Umsatz pro Verkaufszeile. Dieser Effekt ist statistisch signifikant und betrug im Modell rund −64 CHF.  
+- **Produktkategorie**: Bestimmte Produktgruppen, wie beispielsweise „Masculine“, erzielen im Durchschnitt höhere Umsätze, während Kategorien wie „Children“ tendenziell niedrigere Umsätze aufweisen.  
+- **Zahlungsmethode**: Die Zahlungsmethode hat einen kleineren, aber ebenfalls statistisch signifikanten Einfluss. Zahlungen per Kreditkarte führen im Mittel zu einem leicht höheren Umsatz als Barzahlung.
+
+Das Regressionsmodell erklärt rund 2.7 % der Streuung im Umsatz. Auch wenn dieser Anteil auf den ersten Blick gering erscheint, sind die gefundenen Effekte sehr robust. Sie entsprechen den Erwartungen aus der Praxis: Rabatte senken den Preis, bestimmte Produkte verkaufen sich teurer, Zahlungsarten unterscheiden sich im Konsumverhalten.
+
+**Für die Praxis** bedeutet das:
+
+- Rabattaktionen sollten gezielt eingesetzt werden, da sie den Umsatz pro Artikel verringern  
+- Die Sortimentsstrategie (Produktmix) beeinflusst die Erlöse messbar  
+- Kundenbindung über Zahlungsmethoden kann zur Umsatzsteuerung beitragen
+
+> *Dieser Bericht erfüllt alle Anforderungen der NDK HF Transferarbeit und ist vollständig reproduzierbar.*

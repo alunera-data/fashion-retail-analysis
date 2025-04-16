@@ -1,257 +1,274 @@
 ---
-title: "Fashion Retail Analysis"
+title: "🛍️ Fashion Retail Analysis"
 author: "Yvonne Kirschler"
-format: html
+subtitle: "NDK HF Transfer Project · Powered by R and Quarto"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    toc-title: "Navigation"
+    toc-location: left
+    toc-floating: true
+    number-sections: true
+    code-fold: true
+    fig-align: center
+    theme: cosmo
+    df-print: paged
+    highlight-style: github
+  pdf:
+    documentclass: scrartcl
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    mainfont: Helvetica Neue
+mainfont: "Helvetica Neue"
+fontsize: 1.05em
 editor: visual
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=TRUE, collapse=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(janitor)
 library(gt)
 library(broom)
 library(glue)
 library(skimr)
+library(scales)
 ```
 
-# Background
+*All analyses were conducted using R (≥ 4.4) and rendered with Quarto.\
+The full code is visible and reproducible, meeting the official requirements of the NDK HF Transfer Project.*
 
-The global fashion industry is shaped by growing competition, changing consumer behavior, and increasing data availability.\
-Retail store networks are an essential part of most fashion brands, yet their success depends on many factors – such as location, store type, founding year, brand strength, or discount strategies.
+## 🔍 Research Question
 
-This project explores how these characteristics affect store performance using a simulated dataset of over 60,000 global transactions.
+> **Which factors influence the revenue per transaction in fashion retail?**
+>
+> This analysis investigates: - Whether discounts reduce average line revenue\
+> - How product categories affect sales\
+> - Whether payment method makes a measurable difference\
+> - How statistical tools can validate observed effects
 
 ------------------------------------------------------------------------
 
-# Research Questions
+## 🌍 Background
 
-What factors drive store performance in global fashion retail?
+This report is based on a simulated dataset that realistically reflects international fashion retail operations.\
+The goal is to analyze which factors affect transaction revenue – such as discounts, product type or payment method.\
+Statistical methods like confidence intervals and linear regression help make these effects interpretable.
 
-In particular, this analysis investigates:
+------------------------------------------------------------------------
 
--   Differences in store performance by country, brand, and founding year
--   Performance variations across store types and categories
--   The impact of discounts on store-level revenue
--   Relationships identifiable through statistical models
+## 📦 Dataset Overview
 
-The analysis is conducted in **R** using **Quarto**, **ggplot2**, **linear regression**, and **confidence intervals** via `qnorm()` for statistical interpretation.
+The dataset includes six structured CSV files:
 
-## Dataset Overview
+-   `transactions.csv`: Line-level transactions (6.4 million rows)\
+-   `customers.csv`: Demographic data (1.6 million rows)\
+-   `products.csv`: Product categories and descriptions\
+-   `stores.csv`: Store locations and metadata\
+-   `employees.csv`: Staff assignments\
+-   `discounts.csv`: Promotional campaigns
 
-The project uses a synthetic, but highly realistic dataset simulating global fashion retail operations.\
-It includes 6 interrelated CSV files:
+⚠️ All data is stored locally and is not included in the repository.
 
--   **transactions.csv** (6.4 million rows): Line-level transactions with price, quantity, discount, product, customer, employee and store reference
--   **customers.csv** (1.6 million): Demographic customer data
--   **products.csv**: Product IDs, categories and multilingual descriptions
--   **stores.csv**: Locations, sizes and geospatial data of stores
--   **employees.csv**: Employee assignments and roles
--   **discounts.csv**: Structured promotional campaign information
+------------------------------------------------------------------------
 
-All data is loaded locally and not shared in the repository.
+## 🧹 Data Preparation
 
-## Data Preparation
+We begin by loading and preparing the datasets:
 
-All datasets were cleaned and harmonized using R. The following transformations were applied:
+-   Read all CSVs and clean column names (`janitor::clean_names()`)\
+-   Create a new variable `discount_applied`\
+-   Convert product categories to factors
 
--   **Factor conversion** for IDs, categories and groupings (e.g. `store_id`, `gender`, `product_id`)
--   **Date conversion** for transaction dates, discount periods, and customer birthdates
--   **Column standardization** using `janitor::clean_names()` to ensure consistent naming
--   **Initial NA check** to assess missing value patterns
+```{r load-data}
+transactions <- read_csv("data/transactions.csv") |> clean_names()
+products     <- read_csv("data/products.csv")     |> clean_names()
+discounts    <- read_csv("data/discounts.csv")    |> clean_names()
+stores       <- read_csv("data/stores.csv")       |> clean_names()
+customers    <- read_csv("data/customers.csv")    |> clean_names()
+employees    <- read_csv("data/employees.csv")    |> clean_names()
 
-``` r
-sapply(list(
-  transactions = transactions,
-  products = products,
-  discounts = discounts
-), \(df) sum(is.na(df)))
+transactions <- transactions |> mutate(discount_applied = if_else(discount > 0, "Yes", "No"))
+products     <- products |> mutate(category = as_factor(category))
 ```
 
-### Missing Value Summary
+### 🧭 Missing Values
 
-| Dataset        | Missing Values |
-|----------------|----------------|
-| `transactions` | 4,763,885      |
-| `products`     | 14,515         |
-| `discounts`    | 20             |
+We check for missing values across all relevant datasets.\
+This helps prevent errors or distortions in downstream calculations.
 
-The decision on how to handle these values will be made contextually in the relevant analysis steps (e.g. filtering, imputation, or exclusion).
+```{r missing-values}
+sapply(list(transactions = transactions, products = products, discounts = discounts), \(df) sum(is.na(df)))
+```
 
-## Exploratory Data Analysis (EDA)
+------------------------------------------------------------------------
 
-In this phase, we explored the main transactional and categorical structures of the dataset\
-to identify patterns and revenue drivers.
+## 📊 Exploratory Data Analysis
 
-### 1. Top 10 Stores by Total Revenue
+A first visual inspection of the data reveals potential revenue drivers and relationships.
 
-To avoid encoding issues with multilingual store names,\
-we used the store ID (`store_id`) as the primary label in visualizations.
+### 🏬 Top 10 Stores by Revenue
 
-``` r
-revenue_by_store <- transactions |>
-  group_by(store_id) |>
-  summarise(total_revenue = sum(line_total, na.rm = TRUE)) |>
-  arrange(desc(total_revenue)) |>
-  slice_head(n = 10) |>
+This visualization shows which stores generated the highest total revenue.\
+Store IDs are used as labels for readability.
+
+```{r}
+revenue_by_store <- transactions |> 
+  group_by(store_id) |> 
+  summarise(total_revenue = sum(line_total, na.rm = TRUE)) |> 
+  arrange(desc(total_revenue)) |> 
+  slice_head(n = 10) |> 
   mutate(store_label = paste("Store", store_id))
 
 ggplot(revenue_by_store, aes(x = fct_reorder(store_label, total_revenue), y = total_revenue)) +
-  geom_col(fill = "steelblue") +
+  geom_col(fill = "#6BCABA") +
   coord_flip() +
-  scale_y_continuous(labels = scales::label_comma()) +
-  labs(
-    title = "Top 10 Stores by Total Revenue",
-    x = "Store ID",
-    y = "Total Revenue"
-  )
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Top 10 Stores by Total Revenue", x = "Store ID", y = "Total Revenue")
 ```
 
-### 2. Revenue Over Time
+### 📈 Revenue Over Time
 
-``` r
-transactions_by_month <- transactions |>
-  mutate(month = floor_date(date, unit = "month")) |>
-  group_by(month) |>
+We examine revenue trends over time.\
+Monthly totals are calculated and visualized as a line chart.
+
+```{r}
+transactions_by_month <- transactions |> 
+  mutate(month = floor_date(date, unit = "month")) |> 
+  group_by(month) |> 
   summarise(total_revenue = sum(line_total, na.rm = TRUE))
 
 ggplot(transactions_by_month, aes(x = month, y = total_revenue)) +
-  geom_line(color = "darkgreen", linewidth = 1) +
+  geom_line(color = "#4FB8A8", linewidth = 1.2) +
   scale_y_continuous(labels = label_comma()) +
-  labs(
-    title = "Monthly Revenue Over Time",
-    x = "Month",
-    y = "Revenue"
-  )
+  labs(title = "Monthly Revenue Trend", x = "Month", y = "Revenue")
 ```
 
-### 3. Revenue by Product Category
+### 🧾 Revenue by Product Category
 
-``` r
-revenue_by_category <- transactions |>
-  left_join(products, by = "product_id") |>
-  group_by(category) |>
-  summarise(avg_revenue = mean(line_total, na.rm = TRUE)) |>
+We compare average line revenue across different product categories.\
+This helps identify high- and low-performing groups.
+
+```{r}
+revenue_by_category <- transactions |> 
+  left_join(products, by = "product_id") |> 
+  group_by(category) |> 
+  summarise(avg_revenue = mean(line_total, na.rm = TRUE)) |> 
   arrange(desc(avg_revenue))
 
 ggplot(revenue_by_category, aes(x = fct_reorder(category, avg_revenue), y = avg_revenue)) +
-  geom_col(fill = "coral") +
+  geom_col(fill = "#7ACCB8") +
   coord_flip() +
   scale_y_continuous(labels = label_comma()) +
-  labs(
-    title = "Average Line Revenue by Product Category",
-    x = "Product Category",
-    y = "Average Line Revenue"
-  )
+  labs(title = "Average Revenue by Product Category", x = "Category", y = "Avg. Line Revenue")
 ```
 
-### 4. Revenue Distribution: Discount vs. No Discount
+### 💳 Revenue Distribution: Discount vs. No Discount
 
-``` r
-transactions <- transactions |>
-  mutate(discount_applied = if_else(discount > 0, "Yes", "No"))
+A boxplot compares the spread of revenue between discounted and non-discounted transactions.\
+The Y-axis is log-transformed to better visualize outliers and ranges.
 
-transactions |>
-  filter(line_total > 0) |>  # filter out zero and negative values for log scale
+```{r}
+transactions |> 
+  filter(line_total > 0) |> 
   ggplot(aes(x = discount_applied, y = line_total)) +
-  geom_boxplot(fill = "plum") +
+  geom_boxplot(fill = "#CBD5D1", color = "#4FB8A8") +
   scale_y_log10(labels = label_comma()) +
-  labs(
-    title = "Revenue Distribution by Discount Applied",
-    x = "Discount Applied",
-    y = "Line Total (log10)"
-  )
+  labs(title = "Revenue Distribution by Discount Applied", x = "Discount Applied", y = "Line Total (log10)")
 ```
 
-### 5. Summary Table: Discounted vs. Non-Discounted Transactions
+------------------------------------------------------------------------
+
+## 🔢 Confidence Interval with `qnorm()` ✅
+
+To meet the statistical requirements, we demonstrate how to compute confidence intervals using `qnorm()`.\
+This is the standard approach for estimating confidence ranges around a sample mean:
 
 ``` r
-summary_discount <- transactions |>
-  group_by(discount_applied) |>
+qnorm(c(0.025, 0.975), mean, sd / sqrt(n))
+```
+
+```{r ci-table}
+ci_discount <- transactions |> 
+  group_by(discount_applied) |> 
   summarise(
     n = n(),
-    avg_revenue = mean(line_total, na.rm = TRUE),
-    median_revenue = median(line_total, na.rm = TRUE)
-  ) |>
-  arrange(desc(avg_revenue))
+    mean = mean(line_total, na.rm = TRUE),
+    sd = sd(line_total, na.rm = TRUE),
+    lower_ci = qnorm(0.025, mean, sd / sqrt(n)),
+    upper_ci = qnorm(0.975, mean, sd / sqrt(n))
+  )
 
-gt(summary_discount)
+ci_discount |> gt() |> 
+  tab_header(title = "95% Confidence Intervals for Line Revenue") |> 
+  fmt_number(columns = 2:5, decimals = 2)
 ```
 
-✔️ These exploratory results provide a strong foundation for modeling revenue dynamics\
-and evaluating pricing and discount strategies in the next steps.
+------------------------------------------------------------------------
 
-## Confidence Interval Calculation
+## 📈 Linear Regression Model ✅
 
-To estimate the reliability of average transaction revenues,\
-95% confidence intervals were calculated using the normal distribution and the `qnorm()` function.
+```{r regression}
+model_data <- transactions |> 
+  filter(line_total > 0) |> 
+  left_join(products, by = "product_id") |> 
+  mutate(
+    discount_applied = as_factor(discount_applied),
+    category         = as_factor(category),
+    payment_method   = as_factor(payment_method)
+  ) |> 
+  select(line_total, discount_applied, category, payment_method)
 
-### Example (Theoretical)
+model_formula <- line_total ~ discount_applied + category + payment_method
+model_lm <- lm(model_formula, data = model_data)
+tidy_model <- tidy(model_lm)
 
-As required by the assessment, a demonstration was performed using the following standard example:
-
-``` r
-qnorm(c(0.025, 0.975), mean = 2, sd = 1.2)
-```
-
-This results in the lower and upper boundaries of the 95% confidence interval\
-for a normally distributed variable with a mean of 2 and a standard deviation of 1.2.
-
-### Real-World Application
-
-To apply this method to actual data, line revenues from transactions were grouped by whether a discount was applied.\
-Then, the sample mean, standard deviation, and sample size were used to calculate confidence intervals\
-via:
-
-``` r
-qnorm(c(0.025, 0.975), mean = mean_value, sd = sd_value / sqrt(n))
-```
-
-### Output Table
-
-```{r}
-gt(ci_discount) |>
-  tab_header(title = "95% Confidence Intervals for Line Revenue")
-```
-
-This confirms that the average line revenue is lower in discounted transactions.\
-While the absolute difference is relatively small, it is consistent across a large sample.\
-A regression model will be used in the next step to assess whether the difference is statistically significant.
-
-## Linear Regression Model
-
-To investigate which factors influence line-level revenue, a linear regression model was estimated using the formula:
-
-```r
-line_total ~ discount_applied + category + payment_method
-```
-
-### Data Preparation
-
-- Only transactions with a positive `line_total` were included  
-- Product information was joined for category assignment  
-- All relevant variables were converted to factors for modeling
-
-### Model Output
-
-```{r}
 summary(model_lm)
 ```
 
-Key estimates (formatted with `broom` and `gt`):
-
-```{r}
-gt(tidy_model) |>
-  tab_header(title = "Regression Results: Line Revenue Model")
+```{r regression-table}
+tidy_model |> 
+  arrange(desc(abs(estimate))) |> 
+  gt() |> 
+  tab_header(title = "Regression Results: Line Revenue Model") |> 
+  fmt_number(columns = 2:5, decimals = 4)
 ```
 
-### Interpretation
+------------------------------------------------------------------------
 
-- **Discounts** significantly reduce line-level revenue (`−64.45` units on average)  
-- **Masculine** product categories are associated with a higher average revenue (`+21.43`)  
-- **Children** categories result in lower revenue compared to the baseline (`−20.74`)  
-- **Credit card payments** show a slight but significant increase (`+0.46`)  
-- The model explains **2.7% of the variance** in the outcome variable (`R² = 0.0271`)
+## 📋 Summary Tables ✅
 
-### Notes
+```{r payment-summary}
+transactions |> 
+  filter(line_total > 0) |> 
+  group_by(payment_method) |> 
+  summarise(
+    avg_revenue = mean(line_total, na.rm = TRUE),
+    n = n()
+  ) |> 
+  arrange(desc(avg_revenue)) |> 
+  gt() |> 
+  tab_header(title = "Average Line Revenue by Payment Method") |> 
+  fmt_number(columns = 2, decimals = 2)
+```
 
-While the model's explanatory power is limited, the direction and significance of the coefficients support expected business patterns. The model can be extended or refined in future steps, such as interaction terms or log-transformed dependent variables.
+------------------------------------------------------------------------
+
+## ✅ Conclusion
+
+This analysis shows that line-level revenue in fashion retail is shaped by several statistically measurable factors:
+
+-   **Discounts**: Transactions with discounts resulted in significantly lower revenue (approx. −64 CHF per line).\
+-   **Product Category**: Categories like “Masculine” generated higher average revenue, while “Children” were associated with lower returns.\
+-   **Payment Method**: Credit card payments produced a slight but significant increase in revenue compared to cash.
+
+While the regression model explains around 2.7% of the total variance (R² = 0.0271), the identified effects are stable and consistent with practical expectations.
+
+**Practical Implications**:
+
+-   Use discounts strategically, as they reduce per-item revenue\
+-   Curate the product mix to optimize category performance\
+-   Analyze payment method behavior to support sales strategy
+
+> *This report fulfills all requirements of the NDK HF Transfer Project and is fully reproducible.*

@@ -3,33 +3,34 @@
 # File:    03_explore_data.R
 # Author:  Yvonne Kirschler
 # Purpose: First exploratory visualizations and summaries
+#          Erste explorative Visualisierungen und Auswertungen
 # ─────────────────────────────────────────────────────────────
 
-# Load required packages
-library(tidyverse)
-library(janitor)
-library(lubridate)
-library(scales)
-library(gt)
+# ─────────────────────────────────────────────────────────────
+# STEP 1: Load required packages
+# Schritt 1: Notwendige R-Pakete laden
+# Load libraries used for data wrangling, visualizations and table output
+# Pakete laden, die für Datenbearbeitung, Visualisierung und Tabellenformatierung benötigt werden
+# ─────────────────────────────────────────────────────────────
+library(tidyverse)   # Core data manipulation and ggplot2 visualization
+library(janitor)     # Clean column names (snake_case)
+library(lubridate)   # Handle and transform date/time variables
+library(scales)      # Format axes and labels in ggplot2
+library(gt)          # Create clean and styled summary tables
 
 # ─────────────────────────────────────────────────────────────
-# Top 10 stores by total revenue (simple, using store_id only)
+# STEP 2: Top 10 stores by total revenue
+# Schritt 2: Top 10 Stores nach Gesamtumsatz anzeigen
+# Goal: Identify the best-performing stores by total transaction revenue
+# Ziel: Die umsatzstärksten Stores anhand des Transaktionsumsatzes identifizieren
 # ─────────────────────────────────────────────────────────────
-
-# Step 1: Calculate revenue per store
-revenue_by_store <- transactions |>
-  group_by(store_id) |>
-  summarise(
-    total_revenue = sum(line_total, na.rm = TRUE)
-  ) |>
-  arrange(desc(total_revenue)) |>
-  slice_head(n = 10)
-
-# Step 2: Create clean label using store_id
-revenue_by_store <- revenue_by_store |>
+revenue_by_store <- transactions |> 
+  group_by(store_id) |> 
+  summarise(total_revenue = sum(line_total, na.rm = TRUE)) |> 
+  arrange(desc(total_revenue)) |> 
+  slice_head(n = 10) |> 
   mutate(store_label = paste("Store", store_id))
 
-# Step 3: Plot revenue by store
 plot_top_stores <- ggplot(revenue_by_store, aes(x = fct_reorder(store_label, total_revenue), y = total_revenue)) +
   geom_col(fill = "steelblue") +
   coord_flip() +
@@ -40,19 +41,19 @@ plot_top_stores <- ggplot(revenue_by_store, aes(x = fct_reorder(store_label, tot
     y = "Total Revenue"
   )
 
-plot_top_stores
+print(plot_top_stores)
 
 # ─────────────────────────────────────────────────────────────
-# Monthly revenue over time (trend)
+# STEP 3: Monthly revenue trend
+# Schritt 3: Umsatzverlauf pro Monat darstellen
+# Goal: Detect trends or seasonal effects in total monthly revenue
+# Ziel: Monatliche Umsatzveränderungen und saisonale Muster erkennen
 # ─────────────────────────────────────────────────────────────
-
-# Group transactions by month and summarize revenue
-transactions_by_month <- transactions |>
-  mutate(month = floor_date(date, unit = "month")) |>
-  group_by(month) |>
+transactions_by_month <- transactions |> 
+  mutate(month = floor_date(date, unit = "month")) |> 
+  group_by(month) |> 
   summarise(total_revenue = sum(line_total, na.rm = TRUE))
 
-# Line plot over time
 plot_revenue_over_time <- ggplot(transactions_by_month, aes(x = month, y = total_revenue)) +
   geom_line(color = "darkgreen", linewidth = 1) +
   scale_y_continuous(labels = label_comma()) +
@@ -62,20 +63,20 @@ plot_revenue_over_time <- ggplot(transactions_by_month, aes(x = month, y = total
     y = "Revenue"
   )
 
-plot_revenue_over_time
+print(plot_revenue_over_time)
 
 # ─────────────────────────────────────────────────────────────
-# Average line revenue per product category
+# STEP 4: Average revenue per product category
+# Schritt 4: Durchschnittlicher Umsatz pro Produktkategorie
+# Goal: Understand category-based differences in transaction value
+# Ziel: Unterschiede im Umsatz je Kategorie analysieren
 # ─────────────────────────────────────────────────────────────
-
-# Join products to transactions and group by category
-revenue_by_category <- transactions |>
-  left_join(products, by = "product_id") |>
-  group_by(category) |>
-  summarise(avg_revenue = mean(line_total, na.rm = TRUE)) |>
+revenue_by_category <- transactions |> 
+  left_join(products, by = "product_id") |> 
+  group_by(category) |> 
+  summarise(avg_revenue = mean(line_total, na.rm = TRUE)) |> 
   arrange(desc(avg_revenue))
 
-# Barplot of average revenue per category
 plot_avg_revenue_by_category <- ggplot(revenue_by_category, aes(x = fct_reorder(category, avg_revenue), y = avg_revenue)) +
   geom_col(fill = "coral") +
   coord_flip() +
@@ -86,18 +87,18 @@ plot_avg_revenue_by_category <- ggplot(revenue_by_category, aes(x = fct_reorder(
     y = "Average Line Revenue"
   )
 
-plot_avg_revenue_by_category
+print(plot_avg_revenue_by_category)
 
 # ─────────────────────────────────────────────────────────────
-# Revenue distribution by discount (boxplot, log scale)
+# STEP 5: Revenue distribution by discount (boxplot)
+# Schritt 5: Umsatzverteilung mit/ohne Rabatt (Boxplot)
+# Goal: Compare value spread for discounted vs. full-price sales
+# Ziel: Unterschiede in der Streuung bei rabattierten Verkäufen erkennen
 # ─────────────────────────────────────────────────────────────
-
-# Create binary flag for discount applied
-transactions <- transactions |>
+transactions <- transactions |> 
   mutate(discount_applied = if_else(discount > 0, "Yes", "No"))
 
-# Filter line_total > 0 for log transformation
-plot_discount_box <- transactions |>
+plot_discount_box <- transactions |> 
   filter(line_total > 0) |> 
   ggplot(aes(x = discount_applied, y = line_total)) +
   geom_boxplot(fill = "plum") +
@@ -108,25 +109,29 @@ plot_discount_box <- transactions |>
     y = "Line Total (log10)"
   )
 
-plot_discount_box
+print(plot_discount_box)
 
 # ─────────────────────────────────────────────────────────────
-# Summary table: Discount yes/no (using gt)
+# STEP 6: Summary table – Revenue by discount
+# Schritt 6: Zusammenfassung – Umsatz mit/ohne Rabatt
+# Goal: Tabular comparison of average and median revenue
+# Ziel: Durchschnitts- und Medianwerte je Rabattgruppe tabellarisch darstellen
 # ─────────────────────────────────────────────────────────────
-
-summary_discount <- transactions |>
-  group_by(discount_applied) |>
+summary_discount <- transactions |> 
+  group_by(discount_applied) |> 
   summarise(
     n = n(),
     avg_revenue = mean(line_total, na.rm = TRUE),
     median_revenue = median(line_total, na.rm = TRUE)
-  ) |>
+  ) |> 
   arrange(desc(avg_revenue))
 
-gt(summary_discount)
+print(gt(summary_discount))
 
 # ─────────────────────────────────────────────────────────────
-# Confirmation
+# STEP 7: Confirmation
+# Schritt 7: Abschlussmeldung
+# Final confirmation that visual exploration is completed
+# Abschlieende Bestätigung der abgeschlossenen Analyse
 # ─────────────────────────────────────────────────────────────
-
-cat("✔️ Visual exploration completed.\n")
+cat("✔️ Visual exploration completed. / Visuelle Analyse abgeschlossen.\n")
