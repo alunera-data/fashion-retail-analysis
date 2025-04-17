@@ -167,6 +167,9 @@ as long as proper credit is given to the author.
 This project was created by **Yvonne Kirschler**  
 as part of the NDK HF Data Science and is publicly available for educational and reference purposes.
 
+GitHub profile: [@alunera-data](https://github.com/alunera-data)  
+LinkedIn: [Yvonne Kirschler](https://www.linkedin.com/in/yvonne-kirschler-719224188/)
+
 > _This report was written and structured independently.  
 > ChatGPT (OpenAI) was used as a tool to support planning, formulation, and quality control.  
 > All statistical analysis, data work and conclusions were developed and reviewed by the author._
