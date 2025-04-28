@@ -1,7 +1,7 @@
 ---
 title: "🛍️ Fashion Retail Analysis"
 author: "Yvonne Kirschler"
-subtitle: "NDK HF Transfer Project · Powered by R and Quarto"
+subtitle: "NDK HF Transferarbeit · Erstellt mit R und Quarto"
 format:
   html:
     toc: true
@@ -15,6 +15,7 @@ format:
     theme: cosmo
     df-print: paged
     highlight-style: github
+    embed-resources: true
 mainfont: "Helvetica Neue"
 fontsize: 1.05em
 editor: visual
