@@ -3469,7 +3469,7 @@ window.onload = function() {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">🛍️ Fashion Retail Analysis</h1>
-<p class="subtitle lead">NDK HF Transferarbeit · Erstellt mit R und Quarto</p>
+<p class="subtitle lead">NDK HF Transfer Project · Created with R and Quarto</p>
 </div>
 
 
@@ -3512,22 +3512,23 @@ All analysis, implementation, and interpretation were conducted entirely by the 
 </blockquote>
 <section id="research-question" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="research-question"><span class="header-section-number">1</span> Research Question</h2>
-<blockquote class="blockquote">
 <p><strong>Which factors influence the revenue per transaction in fashion retail?</strong></p>
 <p>This analysis investigates:</p>
-<p>- Whether discounts reduce average line revenue<br>
-- How product categories affect sales<br>
-- Whether payment method makes a measurable difference<br>
-- How statistical tools can validate observed effects</p>
-</blockquote>
-<hr>
+<ul>
+<li>Whether discounts reduce average line revenue<br>
+</li>
+<li>How product categories affect sales<br>
+</li>
+<li>Whether payment method makes a measurable difference<br>
+</li>
+<li>How statistical tools can validate observed effects</li>
+</ul>
 </section>
 <section id="background" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="background"><span class="header-section-number">2</span> Background</h2>
 <p>This report is based on a simulated dataset that realistically reflects international fashion retail operations.<br>
 The goal is to analyze which factors affect transaction revenue – such as discounts, product type or payment method.<br>
 Statistical methods like confidence intervals and linear regression help make these effects interpretable.</p>
-<hr>
 </section>
 <section id="dataset-overview" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="dataset-overview"><span class="header-section-number">3</span> Dataset Overview</h2>
@@ -3546,151 +3547,58 @@ Statistical methods like confidence intervals and linear regression help make th
 <li><code>discounts.csv</code>: Promotional campaigns</li>
 </ul>
 <p>⚠️ All data is stored locally and is not included in the repository.</p>
-<hr>
 </section>
 <section id="data-preparation" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">4</span> Data Preparation</h2>
-<p>We begin by loading and preparing the datasets:</p>
-<ul>
-<li>Read all CSVs and clean column names (<code>janitor::clean_names()</code>)<br>
-</li>
-<li>Create a new variable <code>discount_applied</code><br>
-</li>
-<li>Convert product categories to factors</li>
-</ul>
+<p>Reading and preparing the datasets:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>transactions <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/transactions.csv&quot;</span>) <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 6416827 Columns: 19
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr   (8): Invoice ID, Size, Color, Currency, Currency Symbol, SKU, Transact...
-dbl  (10): Line, Customer ID, Product ID, Unit Price, Quantity, Discount, Li...
-dttm  (1): Date
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>products     <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/products.csv&quot;</span>)     <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 17940 Columns: 12
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (10): Category, Sub Category, Description PT, Description DE, Descriptio...
-dbl  (2): Product ID, Production Cost
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>discounts    <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/discounts.csv&quot;</span>)    <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 181 Columns: 6
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr  (3): Description, Category, Sub Category
-dbl  (1): Discont
-date (2): Start, End
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stores       <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/stores.csv&quot;</span>)       <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 35 Columns: 8
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (4): Country, City, Store Name, ZIP Code
-dbl (4): Store ID, Number of Employees, Latitude, Longitude
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>customers    <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/customers.csv&quot;</span>)    <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 1643306 Columns: 9
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr  (7): Name, Email, Telephone, City, Country, Gender, Job Title
-dbl  (1): Customer ID
-date (1): Date Of Birth
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>employees    <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/employees.csv&quot;</span>)    <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 404 Columns: 4
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): Name, Position
-dbl (2): Employee ID, Store ID
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>transactions <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">discount_applied =</span> <span class="fu">if_else</span>(discount <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>))</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>products     <span class="ot">&lt;-</span> products <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category =</span> <span class="fu">as_factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>transactions <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/transactions.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>products     <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/products.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)     <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>discounts    <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/discounts.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)    <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>stores       <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/stores.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)       <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>customers    <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/customers.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)    <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>employees    <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/employees.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)    <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>transactions <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">discount_applied =</span> <span class="fu">if_else</span>(discount <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>products     <span class="ot">&lt;-</span> products <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">category =</span> <span class="fu">as_factor</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="missing-values" class="level3" data-number="4.1">
 <h3 data-number="4.1" class="anchored" data-anchor-id="missing-values"><span class="header-section-number">4.1</span> Missing Values</h3>
-<p>We check for missing values across all relevant datasets.<br>
-This helps prevent errors or distortions in downstream calculations.</p>
+<p>We check for missing values across datasets:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">list</span>(<span class="at">transactions =</span> transactions, <span class="at">products =</span> products, <span class="at">discounts =</span> discounts), \(df) <span class="fu">sum</span>(<span class="fu">is.na</span>(df)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">list</span>(<span class="at">transactions =</span> transactions, <span class="at">products =</span> products, <span class="at">discounts =</span> discounts), \(df) <span class="fu">sum</span>(<span class="fu">is.na</span>(df)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>transactions     products    discounts 
      4763885        14515           20 </code></pre>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="exploratory-data-analysis" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">5</span> Exploratory Data Analysis</h2>
-<p>A first visual inspection of the data reveals potential revenue drivers and relationships.</p>
 <section id="top-10-stores-by-revenue" class="level3" data-number="5.1">
 <h3 data-number="5.1" class="anchored" data-anchor-id="top-10-stores-by-revenue"><span class="header-section-number">5.1</span> Top 10 Stores by Revenue</h3>
-<p>This visualization shows which stores generated the highest total revenue.<br>
-Store IDs are used as labels for readability.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>revenue_by_store <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(store_id) <span class="sc">|&gt;</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_revenue =</span> <span class="fu">sum</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_revenue)) <span class="sc">|&gt;</span> </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">store_label =</span> <span class="fu">paste</span>(<span class="st">&quot;Store&quot;</span>, store_id))</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(revenue_by_store, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(store_label, total_revenue), <span class="at">y =</span> total_revenue)) <span class="sc">+</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;#6BCABA&quot;</span>) <span class="sc">+</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Top 10 Stores by Total Revenue&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Store ID&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Total Revenue&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>revenue_by_store <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(store_id) <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_revenue =</span> <span class="fu">sum</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_revenue)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">store_label =</span> <span class="fu">paste</span>(<span class="st">&quot;Store&quot;</span>, store_id))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(revenue_by_store, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(store_label, total_revenue), <span class="at">y =</span> total_revenue)) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;#6BCABA&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Top 10 Stores by Total Revenue&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Store ID&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Total Revenue&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3703,20 +3611,18 @@ Store IDs are used as labels for readability.</p>
 </section>
 <section id="revenue-over-time" class="level3" data-number="5.2">
 <h3 data-number="5.2" class="anchored" data-anchor-id="revenue-over-time"><span class="header-section-number">5.2</span> Revenue Over Time</h3>
-<p>We examine revenue trends over time.<br>
-Monthly totals are calculated and visualized as a line chart.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>transactions_by_month <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(date, <span class="at">unit =</span> <span class="st">&quot;month&quot;</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_revenue =</span> <span class="fu">sum</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(transactions_by_month, <span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> total_revenue)) <span class="sc">+</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;#4FB8A8&quot;</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Monthly Revenue Trend&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Month&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Revenue&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>transactions_by_month <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(date, <span class="at">unit =</span> <span class="st">&quot;month&quot;</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_revenue =</span> <span class="fu">sum</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(transactions_by_month, <span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> total_revenue)) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;#4FB8A8&quot;</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Monthly Revenue Trend&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Month&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Revenue&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3729,22 +3635,20 @@ Monthly totals are calculated and visualized as a line chart.</p>
 </section>
 <section id="revenue-by-product-category" class="level3" data-number="5.3">
 <h3 data-number="5.3" class="anchored" data-anchor-id="revenue-by-product-category"><span class="header-section-number">5.3</span> Revenue by Product Category</h3>
-<p>We compare average line revenue across different product categories.<br>
-This helps identify high- and low-performing groups.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>revenue_by_category <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(products, <span class="at">by =</span> <span class="st">&quot;product_id&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(category) <span class="sc">|&gt;</span> </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_revenue =</span> <span class="fu">mean</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_revenue))</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(revenue_by_category, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(category, avg_revenue), <span class="at">y =</span> avg_revenue)) <span class="sc">+</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;#7ACCB8&quot;</span>) <span class="sc">+</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Average Revenue by Product Category&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Category&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Avg. Line Revenue&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>revenue_by_category <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(products, <span class="at">by =</span> <span class="st">&quot;product_id&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(category) <span class="sc">|&gt;</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_revenue =</span> <span class="fu">mean</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_revenue))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(revenue_by_category, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(category, avg_revenue), <span class="at">y =</span> avg_revenue)) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;#7ACCB8&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Average Revenue by Product Category&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Category&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Avg. Line Revenue&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3757,17 +3661,15 @@ This helps identify high- and low-performing groups.</p>
 </section>
 <section id="revenue-distribution-discount-vs.-no-discount" class="level3" data-number="5.4">
 <h3 data-number="5.4" class="anchored" data-anchor-id="revenue-distribution-discount-vs.-no-discount"><span class="header-section-number">5.4</span> Revenue Distribution: Discount vs. No Discount</h3>
-<p>A boxplot compares the spread of revenue between discounted and non-discounted transactions.<br>
-The Y-axis is log-transformed to better visualize outliers and ranges.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>transactions <span class="sc">|&gt;</span> </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(line_total <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> discount_applied, <span class="at">y =</span> line_total)) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">&quot;#CBD5D1&quot;</span>, <span class="at">color =</span> <span class="st">&quot;#4FB8A8&quot;</span>) <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Revenue Distribution by Discount Applied&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Discount Applied&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Line Total (log10)&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>transactions <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(line_total <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> discount_applied, <span class="at">y =</span> line_total)) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">&quot;#CBD5D1&quot;</span>, <span class="at">color =</span> <span class="st">&quot;#4FB8A8&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Revenue Distribution by Discount Applied&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Discount Applied&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Line Total (log10)&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3777,46 +3679,43 @@ The Y-axis is log-transformed to better visualize outliers and ranges.</p>
 </div>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="confidence-interval-with-qnorm" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="confidence-interval-with-qnorm"><span class="header-section-number">6</span> Confidence Interval with <code>qnorm()</code></h2>
-<p>To meet the statistical requirements, we demonstrate how to compute confidence intervals using <code>qnorm()</code>.<br>
-This is the standard approach for estimating confidence ranges around a sample mean:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), mean, sd <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), mean, sd <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ci_discount <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(discount_applied) <span class="sc">|&gt;</span> </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower_ci =</span> <span class="fu">qnorm</span>(<span class="fl">0.025</span>, mean, sd <span class="sc">/</span> <span class="fu">sqrt</span>(n)),</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper_ci =</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>, mean, sd <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>ci_discount <span class="sc">|&gt;</span> <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">&quot;95% Confidence Intervals for Line Revenue&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ci_discount <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(discount_applied) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower_ci =</span> <span class="fu">qnorm</span>(<span class="fl">0.025</span>, mean, sd <span class="sc">/</span> <span class="fu">sqrt</span>(n)),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper_ci =</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>, mean, sd <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>ci_discount <span class="sc">|&gt;</span> <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">&quot;95% Confidence Intervals for Line Revenue&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="evyefmflng" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#evyefmflng table {
+<div id="xyxlnhadwz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xyxlnhadwz table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#evyefmflng thead, #evyefmflng tbody, #evyefmflng tfoot, #evyefmflng tr, #evyefmflng td, #evyefmflng th {
+#xyxlnhadwz thead, #xyxlnhadwz tbody, #xyxlnhadwz tfoot, #xyxlnhadwz tr, #xyxlnhadwz td, #xyxlnhadwz th {
 border-style: none;
 }
-#evyefmflng p {
+#xyxlnhadwz p {
 margin: 0;
 padding: 0;
 }
-#evyefmflng .gt_table {
+#xyxlnhadwz .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -3841,11 +3740,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#evyefmflng .gt_caption {
+#xyxlnhadwz .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#evyefmflng .gt_title {
+#xyxlnhadwz .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -3856,7 +3755,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#evyefmflng .gt_subtitle {
+#xyxlnhadwz .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3867,7 +3766,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#evyefmflng .gt_heading {
+#xyxlnhadwz .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3878,12 +3777,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#evyefmflng .gt_bottom_border {
+#xyxlnhadwz .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#evyefmflng .gt_col_headings {
+#xyxlnhadwz .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3897,7 +3796,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#evyefmflng .gt_col_heading {
+#xyxlnhadwz .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3916,7 +3815,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#evyefmflng .gt_column_spanner_outer {
+#xyxlnhadwz .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3927,13 +3826,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#evyefmflng .gt_column_spanner_outer:first-child {
+#xyxlnhadwz .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#evyefmflng .gt_column_spanner_outer:last-child {
+#xyxlnhadwz .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#evyefmflng .gt_column_spanner {
+#xyxlnhadwz .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3944,10 +3843,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#evyefmflng .gt_spanner_row {
+#xyxlnhadwz .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#evyefmflng .gt_group_heading {
+#xyxlnhadwz .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3972,7 +3871,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#evyefmflng .gt_empty_group_heading {
+#xyxlnhadwz .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3986,13 +3885,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#evyefmflng .gt_from_md > :first-child {
+#xyxlnhadwz .gt_from_md > :first-child {
 margin-top: 0;
 }
-#evyefmflng .gt_from_md > :last-child {
+#xyxlnhadwz .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#evyefmflng .gt_row {
+#xyxlnhadwz .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4010,7 +3909,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#evyefmflng .gt_stub {
+#xyxlnhadwz .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4022,7 +3921,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#evyefmflng .gt_stub_row_group {
+#xyxlnhadwz .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4035,13 +3934,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#evyefmflng .gt_row_group_first td {
+#xyxlnhadwz .gt_row_group_first td {
 border-top-width: 2px;
 }
-#evyefmflng .gt_row_group_first th {
+#xyxlnhadwz .gt_row_group_first th {
 border-top-width: 2px;
 }
-#evyefmflng .gt_summary_row {
+#xyxlnhadwz .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -4050,14 +3949,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#evyefmflng .gt_first_summary_row {
+#xyxlnhadwz .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#evyefmflng .gt_first_summary_row.thick {
+#xyxlnhadwz .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#evyefmflng .gt_last_summary_row {
+#xyxlnhadwz .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4066,7 +3965,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#evyefmflng .gt_grand_summary_row {
+#xyxlnhadwz .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -4075,7 +3974,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#evyefmflng .gt_first_grand_summary_row {
+#xyxlnhadwz .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4084,7 +3983,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#evyefmflng .gt_last_grand_summary_row_top {
+#xyxlnhadwz .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4093,10 +3992,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#evyefmflng .gt_striped {
+#xyxlnhadwz .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#evyefmflng .gt_table_body {
+#xyxlnhadwz .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -4104,7 +4003,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#evyefmflng .gt_footnotes {
+#xyxlnhadwz .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -4117,7 +4016,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#evyefmflng .gt_footnote {
+#xyxlnhadwz .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -4125,7 +4024,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#evyefmflng .gt_sourcenotes {
+#xyxlnhadwz .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -4138,64 +4037,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#evyefmflng .gt_sourcenote {
+#xyxlnhadwz .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#evyefmflng .gt_left {
+#xyxlnhadwz .gt_left {
 text-align: left;
 }
-#evyefmflng .gt_center {
+#xyxlnhadwz .gt_center {
 text-align: center;
 }
-#evyefmflng .gt_right {
+#xyxlnhadwz .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#evyefmflng .gt_font_normal {
+#xyxlnhadwz .gt_font_normal {
 font-weight: normal;
 }
-#evyefmflng .gt_font_bold {
+#xyxlnhadwz .gt_font_bold {
 font-weight: bold;
 }
-#evyefmflng .gt_font_italic {
+#xyxlnhadwz .gt_font_italic {
 font-style: italic;
 }
-#evyefmflng .gt_super {
+#xyxlnhadwz .gt_super {
 font-size: 65%;
 }
-#evyefmflng .gt_footnote_marks {
+#xyxlnhadwz .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#evyefmflng .gt_asterisk {
+#xyxlnhadwz .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#evyefmflng .gt_indent_1 {
+#xyxlnhadwz .gt_indent_1 {
 text-indent: 5px;
 }
-#evyefmflng .gt_indent_2 {
+#xyxlnhadwz .gt_indent_2 {
 text-indent: 10px;
 }
-#evyefmflng .gt_indent_3 {
+#xyxlnhadwz .gt_indent_3 {
 text-indent: 15px;
 }
-#evyefmflng .gt_indent_4 {
+#xyxlnhadwz .gt_indent_4 {
 text-indent: 20px;
 }
-#evyefmflng .gt_indent_5 {
+#xyxlnhadwz .gt_indent_5 {
 text-indent: 25px;
 }
-#evyefmflng .katex-display {
+#xyxlnhadwz .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#evyefmflng div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xyxlnhadwz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -4237,28 +4136,27 @@ height: 0px !important;
 </div>
 </div>
 </div>
-<hr>
 </section>
 <section id="linear-regression-model" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="linear-regression-model"><span class="header-section-number">7</span> Linear Regression Model</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(line_total <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(products, <span class="at">by =</span> <span class="st">&quot;product_id&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">discount_applied =</span> <span class="fu">as_factor</span>(discount_applied),</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">category         =</span> <span class="fu">as_factor</span>(category),</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">payment_method   =</span> <span class="fu">as_factor</span>(payment_method)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(line_total, discount_applied, category, payment_method)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>model_formula <span class="ot">&lt;-</span> line_total <span class="sc">~</span> discount_applied <span class="sc">+</span> category <span class="sc">+</span> payment_method</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>model_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(model_formula, <span class="at">data =</span> model_data)</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>tidy_model <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model_lm)</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">&lt;-</span> transactions <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(line_total <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(products, <span class="at">by =</span> <span class="st">&quot;product_id&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">discount_applied =</span> <span class="fu">as_factor</span>(discount_applied),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">category         =</span> <span class="fu">as_factor</span>(category),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">payment_method   =</span> <span class="fu">as_factor</span>(payment_method)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(line_total, discount_applied, category, payment_method)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>model_formula <span class="ot">&lt;-</span> line_total <span class="sc">~</span> discount_applied <span class="sc">+</span> category <span class="sc">+</span> payment_method</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>model_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(model_formula, <span class="at">data =</span> model_data)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>tidy_model <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model_lm)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -4287,27 +4185,27 @@ F-statistic: 4.232e+04 on 4 and 6077195 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>tidy_model <span class="sc">|&gt;</span> </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(estimate))) <span class="sc">|&gt;</span> </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">&quot;Regression Results: Line Revenue Model&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decimals =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tidy_model <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(estimate))) <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">&quot;Regression Results: Line Revenue Model&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decimals =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="rzwfeizxpu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rzwfeizxpu table {
+<div id="kdwgdywogr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kdwgdywogr table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#rzwfeizxpu thead, #rzwfeizxpu tbody, #rzwfeizxpu tfoot, #rzwfeizxpu tr, #rzwfeizxpu td, #rzwfeizxpu th {
+#kdwgdywogr thead, #kdwgdywogr tbody, #kdwgdywogr tfoot, #kdwgdywogr tr, #kdwgdywogr td, #kdwgdywogr th {
 border-style: none;
 }
-#rzwfeizxpu p {
+#kdwgdywogr p {
 margin: 0;
 padding: 0;
 }
-#rzwfeizxpu .gt_table {
+#kdwgdywogr .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -4332,11 +4230,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_caption {
+#kdwgdywogr .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#rzwfeizxpu .gt_title {
+#kdwgdywogr .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -4347,7 +4245,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#rzwfeizxpu .gt_subtitle {
+#kdwgdywogr .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -4358,7 +4256,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#rzwfeizxpu .gt_heading {
+#kdwgdywogr .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -4369,12 +4267,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_bottom_border {
+#kdwgdywogr .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_col_headings {
+#kdwgdywogr .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -4388,7 +4286,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_col_heading {
+#kdwgdywogr .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4407,7 +4305,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#rzwfeizxpu .gt_column_spanner_outer {
+#kdwgdywogr .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4418,13 +4316,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#rzwfeizxpu .gt_column_spanner_outer:first-child {
+#kdwgdywogr .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#rzwfeizxpu .gt_column_spanner_outer:last-child {
+#kdwgdywogr .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#rzwfeizxpu .gt_column_spanner {
+#kdwgdywogr .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -4435,10 +4333,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#rzwfeizxpu .gt_spanner_row {
+#kdwgdywogr .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#rzwfeizxpu .gt_group_heading {
+#kdwgdywogr .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4463,7 +4361,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#rzwfeizxpu .gt_empty_group_heading {
+#kdwgdywogr .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -4477,13 +4375,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#rzwfeizxpu .gt_from_md > :first-child {
+#kdwgdywogr .gt_from_md > :first-child {
 margin-top: 0;
 }
-#rzwfeizxpu .gt_from_md > :last-child {
+#kdwgdywogr .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#rzwfeizxpu .gt_row {
+#kdwgdywogr .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4501,7 +4399,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#rzwfeizxpu .gt_stub {
+#kdwgdywogr .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4513,7 +4411,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#rzwfeizxpu .gt_stub_row_group {
+#kdwgdywogr .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4526,13 +4424,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#rzwfeizxpu .gt_row_group_first td {
+#kdwgdywogr .gt_row_group_first td {
 border-top-width: 2px;
 }
-#rzwfeizxpu .gt_row_group_first th {
+#kdwgdywogr .gt_row_group_first th {
 border-top-width: 2px;
 }
-#rzwfeizxpu .gt_summary_row {
+#kdwgdywogr .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -4541,14 +4439,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#rzwfeizxpu .gt_first_summary_row {
+#kdwgdywogr .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_first_summary_row.thick {
+#kdwgdywogr .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#rzwfeizxpu .gt_last_summary_row {
+#kdwgdywogr .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4557,7 +4455,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_grand_summary_row {
+#kdwgdywogr .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -4566,7 +4464,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#rzwfeizxpu .gt_first_grand_summary_row {
+#kdwgdywogr .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4575,7 +4473,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_last_grand_summary_row_top {
+#kdwgdywogr .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4584,10 +4482,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_striped {
+#kdwgdywogr .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#rzwfeizxpu .gt_table_body {
+#kdwgdywogr .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -4595,7 +4493,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_footnotes {
+#kdwgdywogr .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -4608,7 +4506,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_footnote {
+#kdwgdywogr .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -4616,7 +4514,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#rzwfeizxpu .gt_sourcenotes {
+#kdwgdywogr .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -4629,64 +4527,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#rzwfeizxpu .gt_sourcenote {
+#kdwgdywogr .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#rzwfeizxpu .gt_left {
+#kdwgdywogr .gt_left {
 text-align: left;
 }
-#rzwfeizxpu .gt_center {
+#kdwgdywogr .gt_center {
 text-align: center;
 }
-#rzwfeizxpu .gt_right {
+#kdwgdywogr .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#rzwfeizxpu .gt_font_normal {
+#kdwgdywogr .gt_font_normal {
 font-weight: normal;
 }
-#rzwfeizxpu .gt_font_bold {
+#kdwgdywogr .gt_font_bold {
 font-weight: bold;
 }
-#rzwfeizxpu .gt_font_italic {
+#kdwgdywogr .gt_font_italic {
 font-style: italic;
 }
-#rzwfeizxpu .gt_super {
+#kdwgdywogr .gt_super {
 font-size: 65%;
 }
-#rzwfeizxpu .gt_footnote_marks {
+#kdwgdywogr .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#rzwfeizxpu .gt_asterisk {
+#kdwgdywogr .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#rzwfeizxpu .gt_indent_1 {
+#kdwgdywogr .gt_indent_1 {
 text-indent: 5px;
 }
-#rzwfeizxpu .gt_indent_2 {
+#kdwgdywogr .gt_indent_2 {
 text-indent: 10px;
 }
-#rzwfeizxpu .gt_indent_3 {
+#kdwgdywogr .gt_indent_3 {
 text-indent: 15px;
 }
-#rzwfeizxpu .gt_indent_4 {
+#kdwgdywogr .gt_indent_4 {
 text-indent: 20px;
 }
-#rzwfeizxpu .gt_indent_5 {
+#kdwgdywogr .gt_indent_5 {
 text-indent: 25px;
 }
-#rzwfeizxpu .katex-display {
+#kdwgdywogr .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#rzwfeizxpu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#kdwgdywogr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -4746,40 +4644,39 @@ height: 0px !important;
 </div>
 </div>
 </div>
-<hr>
 </section>
 <section id="summary-tables" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="summary-tables"><span class="header-section-number">8</span> Summary Tables</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>transactions <span class="sc">|&gt;</span> </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(line_total <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(payment_method) <span class="sc">|&gt;</span> </span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_revenue =</span> <span class="fu">mean</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_revenue)) <span class="sc">|&gt;</span> </span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">&quot;Average Line Revenue by Payment Method&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>transactions <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(line_total <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(payment_method) <span class="sc">|&gt;</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_revenue =</span> <span class="fu">mean</span>(line_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_revenue)) <span class="sc">|&gt;</span> </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">&quot;Average Line Revenue by Payment Method&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="ikzobmdhjc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ikzobmdhjc table {
+<div id="pvjeitrbmx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pvjeitrbmx table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#ikzobmdhjc thead, #ikzobmdhjc tbody, #ikzobmdhjc tfoot, #ikzobmdhjc tr, #ikzobmdhjc td, #ikzobmdhjc th {
+#pvjeitrbmx thead, #pvjeitrbmx tbody, #pvjeitrbmx tfoot, #pvjeitrbmx tr, #pvjeitrbmx td, #pvjeitrbmx th {
 border-style: none;
 }
-#ikzobmdhjc p {
+#pvjeitrbmx p {
 margin: 0;
 padding: 0;
 }
-#ikzobmdhjc .gt_table {
+#pvjeitrbmx .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -4804,11 +4701,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_caption {
+#pvjeitrbmx .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#ikzobmdhjc .gt_title {
+#pvjeitrbmx .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -4819,7 +4716,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#ikzobmdhjc .gt_subtitle {
+#pvjeitrbmx .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -4830,7 +4727,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#ikzobmdhjc .gt_heading {
+#pvjeitrbmx .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -4841,12 +4738,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_bottom_border {
+#pvjeitrbmx .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_col_headings {
+#pvjeitrbmx .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -4860,7 +4757,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_col_heading {
+#pvjeitrbmx .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4879,7 +4776,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#ikzobmdhjc .gt_column_spanner_outer {
+#pvjeitrbmx .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4890,13 +4787,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#ikzobmdhjc .gt_column_spanner_outer:first-child {
+#pvjeitrbmx .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#ikzobmdhjc .gt_column_spanner_outer:last-child {
+#pvjeitrbmx .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#ikzobmdhjc .gt_column_spanner {
+#pvjeitrbmx .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -4907,10 +4804,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#ikzobmdhjc .gt_spanner_row {
+#pvjeitrbmx .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#ikzobmdhjc .gt_group_heading {
+#pvjeitrbmx .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4935,7 +4832,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#ikzobmdhjc .gt_empty_group_heading {
+#pvjeitrbmx .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -4949,13 +4846,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#ikzobmdhjc .gt_from_md > :first-child {
+#pvjeitrbmx .gt_from_md > :first-child {
 margin-top: 0;
 }
-#ikzobmdhjc .gt_from_md > :last-child {
+#pvjeitrbmx .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#ikzobmdhjc .gt_row {
+#pvjeitrbmx .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -4973,7 +4870,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#ikzobmdhjc .gt_stub {
+#pvjeitrbmx .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4985,7 +4882,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#ikzobmdhjc .gt_stub_row_group {
+#pvjeitrbmx .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -4998,13 +4895,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#ikzobmdhjc .gt_row_group_first td {
+#pvjeitrbmx .gt_row_group_first td {
 border-top-width: 2px;
 }
-#ikzobmdhjc .gt_row_group_first th {
+#pvjeitrbmx .gt_row_group_first th {
 border-top-width: 2px;
 }
-#ikzobmdhjc .gt_summary_row {
+#pvjeitrbmx .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -5013,14 +4910,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#ikzobmdhjc .gt_first_summary_row {
+#pvjeitrbmx .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_first_summary_row.thick {
+#pvjeitrbmx .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#ikzobmdhjc .gt_last_summary_row {
+#pvjeitrbmx .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -5029,7 +4926,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_grand_summary_row {
+#pvjeitrbmx .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -5038,7 +4935,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#ikzobmdhjc .gt_first_grand_summary_row {
+#pvjeitrbmx .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -5047,7 +4944,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_last_grand_summary_row_top {
+#pvjeitrbmx .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -5056,10 +4953,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_striped {
+#pvjeitrbmx .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#ikzobmdhjc .gt_table_body {
+#pvjeitrbmx .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -5067,7 +4964,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_footnotes {
+#pvjeitrbmx .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -5080,7 +4977,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_footnote {
+#pvjeitrbmx .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -5088,7 +4985,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#ikzobmdhjc .gt_sourcenotes {
+#pvjeitrbmx .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -5101,64 +4998,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#ikzobmdhjc .gt_sourcenote {
+#pvjeitrbmx .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#ikzobmdhjc .gt_left {
+#pvjeitrbmx .gt_left {
 text-align: left;
 }
-#ikzobmdhjc .gt_center {
+#pvjeitrbmx .gt_center {
 text-align: center;
 }
-#ikzobmdhjc .gt_right {
+#pvjeitrbmx .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#ikzobmdhjc .gt_font_normal {
+#pvjeitrbmx .gt_font_normal {
 font-weight: normal;
 }
-#ikzobmdhjc .gt_font_bold {
+#pvjeitrbmx .gt_font_bold {
 font-weight: bold;
 }
-#ikzobmdhjc .gt_font_italic {
+#pvjeitrbmx .gt_font_italic {
 font-style: italic;
 }
-#ikzobmdhjc .gt_super {
+#pvjeitrbmx .gt_super {
 font-size: 65%;
 }
-#ikzobmdhjc .gt_footnote_marks {
+#pvjeitrbmx .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#ikzobmdhjc .gt_asterisk {
+#pvjeitrbmx .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#ikzobmdhjc .gt_indent_1 {
+#pvjeitrbmx .gt_indent_1 {
 text-indent: 5px;
 }
-#ikzobmdhjc .gt_indent_2 {
+#pvjeitrbmx .gt_indent_2 {
 text-indent: 10px;
 }
-#ikzobmdhjc .gt_indent_3 {
+#pvjeitrbmx .gt_indent_3 {
 text-indent: 15px;
 }
-#ikzobmdhjc .gt_indent_4 {
+#pvjeitrbmx .gt_indent_4 {
 text-indent: 20px;
 }
-#ikzobmdhjc .gt_indent_5 {
+#pvjeitrbmx .gt_indent_5 {
 text-indent: 25px;
 }
-#ikzobmdhjc .katex-display {
+#pvjeitrbmx .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#ikzobmdhjc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#pvjeitrbmx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -5191,27 +5088,16 @@ height: 0px !important;
 </div>
 </div>
 </div>
-<hr>
 </section>
 <section id="conclusion" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">9</span> Conclusion</h2>
 <p>This analysis shows that line-level revenue in fashion retail is shaped by several statistically measurable factors:</p>
 <ul>
-<li><strong>Discounts</strong>: Transactions with discounts resulted in significantly lower revenue (approx. −64 CHF per line).<br>
-</li>
-<li><strong>Product Category</strong>: Categories like “Masculine” generated higher average revenue, while “Children” were associated with lower returns.<br>
-</li>
-<li><strong>Payment Method</strong>: Credit card payments produced a slight but significant increase in revenue compared to cash.</li>
+<li><strong>Discounts</strong>: Transactions with discounts resulted in significantly lower revenue (~−64 CHF).</li>
+<li><strong>Product Category</strong>: Categories like “Masculine” performed better than “Children”.</li>
+<li><strong>Payment Method</strong>: Credit card transactions produced slightly higher revenues.</li>
 </ul>
-<p>While the regression model explains around 2.7% of the total variance (R² = 0.0271), the identified effects are stable and consistent with practical expectations.</p>
-<p><strong>Practical Implications</strong>:</p>
-<ul>
-<li>Use discounts strategically, as they reduce per-item revenue<br>
-</li>
-<li>Curate the product mix to optimize category performance<br>
-</li>
-<li>Analyze payment method behavior to support sales strategy</li>
-</ul>
+<p>While the model explains about 2.7% of the variance (R² = 0.0271), the identified effects are strong and consistent with practical expectations.</p>
 <blockquote class="blockquote">
 <p><em>This report fulfills all requirements of the NDK HF Transfer Project and is fully reproducible.</em></p>
 </blockquote>
