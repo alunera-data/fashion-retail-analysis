@@ -6,23 +6,19 @@
 #          Erste explorative Visualisierungen und Auswertungen
 # ─────────────────────────────────────────────────────────────
 
-# ─────────────────────────────────────────────────────────────
 # STEP 1: Load required packages
-# Schritt 1: Notwendige R-Pakete laden
-# Load libraries used for data wrangling, visualizations and table output
-# Pakete laden, die für Datenbearbeitung, Visualisierung und Tabellenformatierung benötigt werden
+# Load libraries for wrangling, plotting and table output
+# Pakete für Datenaufbereitung, Visualisierung und Tabellen laden
 # ─────────────────────────────────────────────────────────────
-library(tidyverse)   # Core data manipulation and ggplot2 visualization
-library(janitor)     # Clean column names (snake_case)
-library(lubridate)   # Handle and transform date/time variables
-library(scales)      # Format axes and labels in ggplot2
-library(gt)          # Create clean and styled summary tables
+library(tidyverse)   # Data manipulation and ggplot2 visualization
+library(janitor)     # Clean column names
+library(lubridate)   # Date/time parsing
+library(scales)      # Formatting for axis labels
+library(gt)          # Reporting tables
 
-# ─────────────────────────────────────────────────────────────
 # STEP 2: Top 10 stores by total revenue
-# Schritt 2: Top 10 Stores nach Gesamtumsatz anzeigen
-# Goal: Identify the best-performing stores by total transaction revenue
-# Ziel: Die umsatzstärksten Stores anhand des Transaktionsumsatzes identifizieren
+# Identify the best-performing stores by revenue
+# Die 10 umsatzstärksten Filialen anzeigen
 # ─────────────────────────────────────────────────────────────
 revenue_by_store <- transactions |> 
   group_by(store_id) |> 
@@ -43,11 +39,9 @@ plot_top_stores <- ggplot(revenue_by_store, aes(x = fct_reorder(store_label, tot
 
 print(plot_top_stores)
 
-# ─────────────────────────────────────────────────────────────
 # STEP 3: Monthly revenue trend
-# Schritt 3: Umsatzverlauf pro Monat darstellen
-# Goal: Detect trends or seasonal effects in total monthly revenue
-# Ziel: Monatliche Umsatzveränderungen und saisonale Muster erkennen
+# Show seasonal trends in monthly sales
+# Monatlicher Umsatzverlauf – z. B. für Saisonalität
 # ─────────────────────────────────────────────────────────────
 transactions_by_month <- transactions |> 
   mutate(month = floor_date(date, unit = "month")) |> 
@@ -65,11 +59,9 @@ plot_revenue_over_time <- ggplot(transactions_by_month, aes(x = month, y = total
 
 print(plot_revenue_over_time)
 
-# ─────────────────────────────────────────────────────────────
 # STEP 4: Average revenue per product category
-# Schritt 4: Durchschnittlicher Umsatz pro Produktkategorie
-# Goal: Understand category-based differences in transaction value
-# Ziel: Unterschiede im Umsatz je Kategorie analysieren
+# Compare categories by average transaction value
+# Ø Umsatz nach Produktkategorie
 # ─────────────────────────────────────────────────────────────
 revenue_by_category <- transactions |> 
   left_join(products, by = "product_id") |> 
@@ -89,11 +81,9 @@ plot_avg_revenue_by_category <- ggplot(revenue_by_category, aes(x = fct_reorder(
 
 print(plot_avg_revenue_by_category)
 
-# ─────────────────────────────────────────────────────────────
-# STEP 5: Revenue distribution by discount (boxplot)
-# Schritt 5: Umsatzverteilung mit/ohne Rabatt (Boxplot)
-# Goal: Compare value spread for discounted vs. full-price sales
-# Ziel: Unterschiede in der Streuung bei rabattierten Verkäufen erkennen
+# STEP 5: Revenue distribution with vs. without discount
+# Boxplot shows spread between discounted and non-discounted sales
+# Umsatzverteilung mit/ohne Rabatt (Boxplot)
 # ─────────────────────────────────────────────────────────────
 transactions <- transactions |> 
   mutate(discount_applied = if_else(discount > 0, "Yes", "No"))
@@ -111,11 +101,31 @@ plot_discount_box <- transactions |>
 
 print(plot_discount_box)
 
+# STEP 6: NEW – Revenue by number of employees (scatterplot)
+# Analyze relationship between store size and performance
+# Zusammenhang zwischen Store-Grösse und Umsatz (Streudiagramm)
 # ─────────────────────────────────────────────────────────────
-# STEP 6: Summary table – Revenue by discount
-# Schritt 6: Zusammenfassung – Umsatz mit/ohne Rabatt
-# Goal: Tabular comparison of average and median revenue
-# Ziel: Durchschnitts- und Medianwerte je Rabattgruppe tabellarisch darstellen
+revenue_by_store_size <- transactions |> 
+  group_by(store_id) |> 
+  summarise(total_revenue = sum(line_total, na.rm = TRUE)) |> 
+  left_join(stores, by = "store_id") |>
+  mutate(number_of_employees = as.numeric(number_of_employees))  # Ensure numeric axis
+
+plot_revenue_vs_employees <- ggplot(revenue_by_store_size, aes(x = number_of_employees, y = total_revenue)) +
+  geom_point(color = "#6BCABA", size = 2, alpha = 0.8) +
+  scale_x_continuous(breaks = pretty_breaks()) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(
+    title = "Revenue by Store Size",
+    x = "Number of Employees",
+    y = "Total Revenue"
+  )
+
+print(plot_revenue_vs_employees)
+
+# STEP 7: Summary table – revenue by discount status
+# Display n, mean, median by discount group
+# Tabelle zu Rabattgruppen mit n, Mittelwert, Median
 # ─────────────────────────────────────────────────────────────
 summary_discount <- transactions |> 
   group_by(discount_applied) |> 
@@ -128,10 +138,8 @@ summary_discount <- transactions |>
 
 print(gt(summary_discount))
 
-# ─────────────────────────────────────────────────────────────
-# STEP 7: Confirmation
-# Schritt 7: Abschlussmeldung
-# Final confirmation that visual exploration is completed
-# Abschlieende Bestätigung der abgeschlossenen Analyse
+# STEP 8: Done
+# Final confirmation message
+# Abschlussmeldung zur visuellen Exploration
 # ─────────────────────────────────────────────────────────────
 cat("✔️ Visual exploration completed. / Visuelle Analyse abgeschlossen.\n")

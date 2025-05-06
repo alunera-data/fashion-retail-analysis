@@ -3,24 +3,22 @@
 # File:    01_load_data.R
 # Author:  Yvonne Kirschler
 # Purpose: Load and preview all relevant CSV datasets
-#          Einlesen und erste Vorschau aller relevanten CSV-Daten
+#          Einlesen und Vorschau aller relevanten CSV-Daten
 # ─────────────────────────────────────────────────────────────
 
 # ─────────────────────────────────────────────────────────────
 # STEP 1: Load required packages
-# Schritt 1: Notwendige R-Pakete laden
 # Load libraries for importing, cleaning and inspecting data
-# Pakete für den Datenimport, die Bereinigung und die Strukturvorschau laden
+# Pakete für Import, Bereinigung und Vorschau laden
 # ─────────────────────────────────────────────────────────────
-library(tidyverse)   # Data import and wrangling
-library(janitor)     # Clean column names
-library(skimr)       # Summary statistics
+library(tidyverse)   # Data import and wrangling | Datenmanipulation
+library(janitor)     # Clean column names        | Spaltennamen bereinigen
+library(skimr)       # Summary statistics        | Übersicht und NA-Analyse
 
 # ─────────────────────────────────────────────────────────────
 # STEP 2: Define file paths
-# Schritt 2: Dateipfade definieren
-# Define the expected CSV files in the local /data folder
-# CSV-Dateien, die im lokalen /data-Ordner liegen, benennen
+# Define expected CSV file locations in /data folder
+# CSV-Dateien im lokalen /data-Verzeichnis benennen
 # ─────────────────────────────────────────────────────────────
 files <- list(
   stores        = "data/stores.csv",
@@ -33,40 +31,36 @@ files <- list(
 
 # ─────────────────────────────────────────────────────────────
 # STEP 3: Read CSVs and clean column names
-# Schritt 3: CSVs einlesen und Spaltennamen bereinigen
-# Read all files into memory and standardize column names
-# Alle Dateien einlesen und Spaltennamen im Tidy-Format bereinigen
+# Read files into memory, suppress column specs, clean names
+# Dateien einlesen, Spaltentypen-Nachricht unterdrücken, Namen bereinigen
 # ─────────────────────────────────────────────────────────────
-stores       <- read_csv(files$stores) |> clean_names()
-products     <- read_csv(files$products) |> clean_names()
-transactions <- read_csv(files$transactions) |> clean_names()
-customers    <- read_csv(files$customers) |> clean_names()
-employees    <- read_csv(files$employees) |> clean_names()
-discounts    <- read_csv(files$discounts) |> clean_names()
+stores       <- read_csv(files$stores,        show_col_types = FALSE) |> clean_names()
+products     <- read_csv(files$products,      show_col_types = FALSE) |> clean_names()
+transactions <- read_csv(files$transactions,  show_col_types = FALSE) |> clean_names()
+customers    <- read_csv(files$customers,     show_col_types = FALSE) |> clean_names()
+employees    <- read_csv(files$employees,     show_col_types = FALSE) |> clean_names()
+discounts    <- read_csv(files$discounts,     show_col_types = FALSE) |> clean_names()
 
 # ─────────────────────────────────────────────────────────────
 # STEP 4: Print structure of selected datasets
-# Schritt 4: Struktur ausgewählter Tabellen anzeigen
-# Use glimpse() to get a quick overview of selected key tables
-# Die Struktur wichtiger Tabellen zur Sichtprüfung ausgeben
+# Use glimpse() to check structure of selected tables
+# Struktur wichtiger Tabellen mit glimpse() prüfen
 # ─────────────────────────────────────────────────────────────
 glimpse(stores)        # Store metadata
-glimpse(transactions)  # Core transaction records
-glimpse(discounts)     # Promotional campaigns
+glimpse(transactions)  # Core transaction data
+glimpse(discounts)     # Discount campaigns
 
 # ─────────────────────────────────────────────────────────────
 # STEP 5: Summarize transaction data
-# Schritt 5: Transaktionsdaten zusammenfassen
-# Use skimr to summarize variable types, distributions and NAs
-# Mit skimr Variablentypen, Verteilungen und fehlende Werte prüfen
+# Check types, missing values, and distributions
+# Variablentypen, Verteilungen und NAs prüfen
 # ─────────────────────────────────────────────────────────────
 skim(transactions)
 
 # ─────────────────────────────────────────────────────────────
-# STEP 6: Confirm loading results
-# Schritt 6: Datenlade-Ergebnisse bestätigen
-# Show the number of rows per table as a loading confirmation
-# Zeilenzahl jeder Tabelle zur Bestätigung ausgeben
+# STEP 6: Confirm successful loading
+# Output row count per table for confirmation
+# Zeilenanzahl je Tabelle zur Bestätigung anzeigen
 # ─────────────────────────────────────────────────────────────
 cat("✔️ Data successfully loaded:\n")
 cat("- Stores:       ", nrow(stores), "rows\n")
@@ -75,3 +69,4 @@ cat("- Transactions: ", nrow(transactions), "rows\n")
 cat("- Customers:    ", nrow(customers), "rows\n")
 cat("- Employees:    ", nrow(employees), "rows\n")
 cat("- Discounts:    ", nrow(discounts), "rows\n")
+

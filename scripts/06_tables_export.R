@@ -6,57 +6,48 @@
 #          Formatierte Ergebnistabellen für den Bericht exportieren
 # ─────────────────────────────────────────────────────────────
 
-# ─────────────────────────────────────────────────────────────
 # STEP 1: Load required packages
-# Schritt 1: Notwendige R-Pakete laden
 # Load libraries for table formatting and tidy model output
-# Pakete für Tabellenformatierung und saubere Modellzusammenfassungen laden
+# Pakete für Tabellenformatierung und Modellausgabe laden
 # ─────────────────────────────────────────────────────────────
-library(tidyverse)   # Data manipulation and grouping
-library(gt)          # Create formatted and styled tables
-library(broom)       # Clean model output formatting
+library(tidyverse)   # Data wrangling and summarisation
+library(gt)          # Pretty tables for reports
+library(broom)       # Clean model summaries
 
+# STEP 2: Format confidence interval table
+# Create formatted table of confidence intervals by discount group
+# Konfidenzintervalle nach Rabattstatus sauber tabellarisch darstellen
 # ─────────────────────────────────────────────────────────────
-# STEP 2: Create table for confidence intervals
-# Schritt 2: Tabelle für Konfidenzintervalle erstellen
-# Show CI values with group labels, formatted using gt()
-# Konfidenzintervalle tabellarisch anzeigen und formatieren
-# ─────────────────────────────────────────────────────────────
-ci_discount <- ci_discount |> 
-  rename(std_dev = sd)
+ci_discount <- ci_discount |> rename(std_dev = sd)
 
-ci_table <- gt(ci_discount) |> 
-  tab_header(
-    title = md("**95% Confidence Intervals**"),
+ci_table <- gt::gt(ci_discount) |> 
+  gt::tab_header(
+    title = md("**95% Confidence Intervals for Line Revenue**"),
     subtitle = "Grouped by Discount Status"
   ) |> 
-  fmt_number(columns = c(mean, std_dev, lower_ci, upper_ci), decimals = 2) |> 
-  tab_source_note("Source: Fashion Retail Transaction Data (n ≈ 6.4 million)")
+  gt::fmt_number(columns = 2:6, decimals = 2) |>  # <- korrigiert auf columns = 2:6
+  gt::tab_source_note("Source: Fashion Retail Transaction Data (n ≈ 6.4 million)")
 
 print(ci_table)
 
+# STEP 3: Format regression results table
+# Present linear model output as readable regression summary
+# Regressionsmodell tabellarisch aufbereiten für den Bericht
 # ─────────────────────────────────────────────────────────────
-# STEP 3: Create regression output table
-# Schritt 3: Regressionsausgabe als Tabelle formatieren
-# Convert and sort coefficients from model, display with gt()
-# Modellkoeffizienten tabellarisch darstellen und formatieren
-# ─────────────────────────────────────────────────────────────
-reg_table <- tidy(model_lm) |> 
+reg_table <- broom::tidy(model_lm) |> 
   arrange(desc(abs(estimate))) |> 
-  gt() |> 
-  tab_header(
+  gt::gt() |> 
+  gt::tab_header(
     title = md("**Regression Results: Line Revenue Model**")
   ) |> 
-  fmt_number(columns = c(estimate, std.error, statistic, p.value), decimals = 4) |> 
-  tab_source_note("Model fitted using linear regression (lm)")
+  gt::fmt_number(columns = c(estimate, std.error, statistic, p.value), decimals = 4) |> 
+  gt::tab_source_note("Model fitted using linear regression (lm)")
 
 print(reg_table)
 
-# ─────────────────────────────────────────────────────────────
-# STEP 4: Create summary table by payment method
-# Schritt 4: Tabelle nach Zahlungsmethode erstellen
-# Show average revenue and count per payment method
-# Durchschnittsumsatz und Fallzahl pro Zahlungsmethode darstellen
+# STEP 4: Summary table by payment method
+# Show avg revenue and observation count by payment method
+# Durchschnittlicher Umsatz pro Zahlungsmethode als Tabelle
 # ─────────────────────────────────────────────────────────────
 payment_summary <- transactions |> 
   filter(line_total > 0) |> 
@@ -66,19 +57,18 @@ payment_summary <- transactions |>
     n = n()
   ) |> 
   arrange(desc(avg_revenue)) |> 
-  gt() |> 
-  tab_header(
+  gt::gt() |> 
+  gt::tab_header(
     title = md("**Average Line Revenue by Payment Method**")
   ) |> 
-  fmt_number(columns = c(avg_revenue), decimals = 2) |> 
-  tab_source_note("Based on all valid transactions")
+  gt::fmt_number(columns = c(avg_revenue), decimals = 2) |> 
+  gt::tab_source_note("Based on all valid transactions")
 
 print(payment_summary)
 
-# ─────────────────────────────────────────────────────────────
-# STEP 5: Final confirmation
-# Schritt 5: Abschlussmeldung
-# Confirm that tables were created successfully
-# Bestätigung der erfolgreichen Tabellenerstellung
+# STEP 5: Completion confirmation
+# Confirm that tables have been created and printed
+# Ausgabe zur erfolgreichen Erstellung der Ergebnis-Tabellen
 # ─────────────────────────────────────────────────────────────
 cat("✔️ Summary tables created for reporting. / Tabellen erfolgreich erstellt.\n")
+

@@ -6,29 +6,23 @@
 #          Berechnung von 95%-Konfidenzintervallen mit qnorm()
 # ─────────────────────────────────────────────────────────────
 
-# ─────────────────────────────────────────────────────────────
 # STEP 1: Load required packages
-# Schritt 1: Notwendige R-Pakete laden
 # Load libraries for statistical calculation and table formatting
-# Pakete für statistische Berechnung und tabellarische Darstellung laden
+# Pakete für Statistik und Tabellenformatierung laden
 # ─────────────────────────────────────────────────────────────
 library(tidyverse)   # Data manipulation and summary
 library(gt)          # Create formatted summary tables
 
-# ─────────────────────────────────────────────────────────────
-# STEP 2: Demonstrate qnorm() with given parameters
-# Schritt 2: qnorm() demonstrieren mit Beispielwerten
-# Required: Show understanding of the confidence interval formula
-# Vorgabe: Konfidenzintervallformel exemplarisch anwenden
+# STEP 2: Demonstrate qnorm() with example
+# Demonstration of required formula from assignment
+# Vorgabe aus Transferauftrag (qnorm mit Beispielwerten)
 # ─────────────────────────────────────────────────────────────
 ci_example <- qnorm(c(0.025, 0.975), mean = 2, sd = 1.2)
 print(ci_example)
 
-# ─────────────────────────────────────────────────────────────
-# STEP 3: Calculate CI for group "discount_applied = Yes"
-# Schritt 3: Konfidenzintervall für rabattierte Transaktionen
-# Calculate mean and SD, apply qnorm with SE
-# Mittelwert und Standardabweichung berechnen, qnorm anwenden
+# STEP 3: Calculate CI for "discount_applied = Yes"
+# Compute group-specific confidence interval for discounted sales
+# Konfidenzintervall für rabattierte Transaktionen berechnen
 # ─────────────────────────────────────────────────────────────
 discount_yes <- transactions |> 
   filter(discount_applied == "Yes") |> 
@@ -49,11 +43,9 @@ ci_discount_yes <- qnorm(
 )
 print(ci_discount_yes)
 
-# ─────────────────────────────────────────────────────────────
-# STEP 4: Calculate CI for both groups using qnorm()
-# Schritt 4: Konfidenzintervalle für beide Gruppen berechnen
-# Apply qnorm to both discount groups (Yes/No)
-# Berechnung für beide Gruppen auf Basis der Gruppenmittelwerte
+# STEP 4: Calculate CI for both discount groups
+# Apply qnorm() to Yes/No discount groups
+# Konfidenzintervalle für beide Rabattgruppen (Yes/No)
 # ─────────────────────────────────────────────────────────────
 ci_discount <- transactions |> 
   group_by(discount_applied) |> 
@@ -67,19 +59,20 @@ ci_discount <- transactions |>
 
 print(ci_discount)
 
-# ─────────────────────────────────────────────────────────────
-# STEP 5: Create formatted summary table
-# Schritt 5: Formatierte Tabelle für Bericht erzeugen
-# Show results in clean report format (e.g. Quarto)
-# Darstellung der Ergebnisse in lesbarer Tabellenform
+# STEP 5: Create gt() summary table
+# Format CI table for use in Quarto report
+# Tabelle mit Konfidenzintervallen für den Bericht formatieren
 # ─────────────────────────────────────────────────────────────
 gt(ci_discount) |> 
-  tab_header(title = "95% Confidence Intervals for Line Revenue")
+  tab_header(
+    title = "95% Confidence Intervals for Line Revenue",
+    subtitle = "Grouped by Discount Status"
+  ) |> 
+  fmt_number(columns = 2:6, decimals = 2) |> 
+  tab_source_note("Source: Fashion Retail Transaction Data (n ≈ 6.4 million)")
 
-# ─────────────────────────────────────────────────────────────
 # STEP 6: Final confirmation
-# Schritt 6: Abschlussmeldung
-# Confirm that calculations are complete
-# Ausgabe zur erfolgreichen Berechnung
+# Abschlussmeldung zur erfolgreichen Berechnung
 # ─────────────────────────────────────────────────────────────
 cat("✔️ 95% confidence intervals calculated using qnorm(). / Konfidenzintervalle berechnet.\n")
+

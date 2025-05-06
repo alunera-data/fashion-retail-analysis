@@ -6,21 +6,17 @@
 #          Regressionsmodell berechnen und interpretieren
 # ─────────────────────────────────────────────────────────────
 
-# ─────────────────────────────────────────────────────────────
 # STEP 1: Load required packages
-# Schritt 1: Notwendige R-Pakete laden
 # Load libraries for modeling and report formatting
 # Pakete zum Erstellen und Formatieren von Regressionsmodellen laden
 # ─────────────────────────────────────────────────────────────
-library(tidyverse)   # Data transformation and base modeling
+library(tidyverse)   # Data transformation and modeling
 library(broom)       # Convert lm() output into tidy format
 library(gt)          # Create clean, formatted regression tables
 
-# ─────────────────────────────────────────────────────────────
 # STEP 2: Prepare data for modeling
-# Schritt 2: Daten für das Modell vorbereiten
-# Join product information, filter out invalid values, set factor types
-# Produktdaten verknüpfen, ungültige Zeilen entfernen, Datentypen anpassen
+# Join product information, remove invalid rows, set factors
+# Produktdaten verknüpfen, ungültige Zeilen entfernen, Datentypen setzen
 # ─────────────────────────────────────────────────────────────
 model_data <- transactions |> 
   filter(line_total > 0) |> 
@@ -32,41 +28,41 @@ model_data <- transactions |>
   ) |> 
   select(line_total, discount_applied, category, payment_method)
 
-# ─────────────────────────────────────────────────────────────
-# STEP 3: Define and estimate the regression model
-# Schritt 3: Regressionsmodell definieren und berechnen
-# Model structure reflects expected revenue influencers
-# Modellstruktur spiegelt Einflussgrössen auf Umsatz wider
+# STEP 3: Define and run regression model
+# Define structure and run linear model
+# Modellformel definieren und lineares Modell berechnen
 # ─────────────────────────────────────────────────────────────
 model_formula <- line_total ~ discount_applied + category + payment_method
 model_lm <- lm(model_formula, data = model_data)
 
+# STEP 4: Output model summary
+# Show coefficients and fit metrics (R², adj. R² etc.)
+# Modellzusammenfassung und Gütemasse anzeigen
 # ─────────────────────────────────────────────────────────────
-# STEP 4: Print model summary and key metrics
-# Schritt 4: Modellzusammenfassung und Qualitätskennzahlen anzeigen
-# Show coefficients and model fit (R², adj. R², F-statistic, etc.)
-# Regressionskoeffizienten und Modellgüte anzeigen
-# ─────────────────────────────────────────────────────────────
-print(summary(model_lm))        # full summary
-print(glance(model_lm))         # model performance
+print(summary(model_lm))   # Full summary
+print(glance(model_lm))    # Model diagnostics
 
-# ─────────────────────────────────────────────────────────────
-# STEP 5: Format model output as regression table
-# Schritt 5: Ausgabe als formatierte Tabelle für Bericht
+# STEP 5: Format regression output for report
 # Create tidy table sorted by effect size
-# Formatierte Übersicht der geschätzten Effekte
+# Formatierte Regressionsausgabe für Bericht generieren
 # ─────────────────────────────────────────────────────────────
 tidy_model <- tidy(model_lm) |> 
   arrange(desc(abs(estimate)))
 
-reg_table <- gt(tidy_model) |> 
-  tab_header(title = "Regression Results: Line Revenue Model")
+reg_table <- tidy_model |> 
+  gt() |> 
+  tab_header(
+    title = "Regression Results: Line Revenue Model",
+    subtitle = "Estimated using lm() with n > 6 million rows"
+  ) |> 
+  fmt_number(columns = 2:5, decimals = 4) |> 
+  tab_source_note("Model: Revenue ~ Discount + Category + Payment Method")
+
 print(reg_table)
 
-# ─────────────────────────────────────────────────────────────
 # STEP 6: Final confirmation
-# Schritt 6: Abschlussmeldung
-# Confirm successful model creation
-# Abschluss der Regressionsanalyse bestätigen
+# Confirm successful regression execution
+# Regressionsmodell erfolgreich abgeschlossen
 # ─────────────────────────────────────────────────────────────
 cat("✔️ Linear regression model estimated and summarised. / Regressionsmodell erfolgreich berechnet.\n")
+

@@ -31,45 +31,43 @@ library(skimr)
 library(scales)
 ```
 
-*All analyses were performed using R (≥ 4.4) and rendered with Quarto.  
-All code is visible and fully reproducible in accordance with the NDK HF guidelines.*
+*All analyses were conducted using R (≥ 4.4) and rendered with Quarto.\
+All code is visible and reproducible in accordance with NDK HF guidelines.*
 
-> _This report was written independently. ChatGPT (OpenAI) was used as a tool to assist with structure, phrasing, and quality control.  
-> All analysis, implementation, and interpretation were conducted entirely by the author._
+> *This report was written independently. ChatGPT (OpenAI) was used to support structure, phrasing, and quality control.\
+> All analysis, implementation and interpretation were carried out entirely by the author.*
 
 ## Research Question
 
-**Which factors influence the revenue per transaction in fashion retail?**
+**Which factors influence revenue per transaction in fashion retail?**
 
-This analysis investigates:
+This project investigates:
 
-- Whether discounts reduce average line revenue  
+- Whether discounts reduce average transaction revenue  
 - How product categories affect sales  
-- Whether payment method makes a measurable difference  
-- How statistical tools can validate observed effects
+- Whether payment method has a measurable impact  
+- How these effects can be validated statistically
 
 ## Background
 
-This report is based on a simulated dataset that realistically reflects international fashion retail operations.  
-The goal is to analyze which factors affect transaction revenue – such as discounts, product type or payment method.  
-Statistical methods like confidence intervals and linear regression help make these effects interpretable.
+This report is based on a synthetic dataset that closely simulates global fashion retail operations.\
+The goal is to analyze factors that impact revenue per transaction – such as discount usage, product type, and payment method.\
+Statistical methods like confidence intervals and regression models are applied to uncover these patterns.
 
 ## Dataset Overview
 
 The dataset includes six structured CSV files:
 
-- `transactions.csv`: Line-level transactions (6.4 million rows)  
-- `customers.csv`: Demographic data (1.6 million rows)  
+- `transactions.csv`: Transaction records (~6.4 million rows)  
+- `customers.csv`: Customer demographic information  
 - `products.csv`: Product categories and descriptions  
 - `stores.csv`: Store locations and metadata  
 - `employees.csv`: Staff assignments  
 - `discounts.csv`: Promotional campaigns  
 
-⚠️ All data is stored locally and is not included in the repository.
+⚠️ The data is stored locally and is not included in the repository.
 
 ## Data Preparation
-
-Reading and preparing the datasets:
 
 ```{r load-data}
 transactions <- read_csv("data/transactions.csv", show_col_types = FALSE) |> clean_names()
@@ -85,13 +83,14 @@ products     <- products |> mutate(category = as_factor(category))
 
 ### Missing Values
 
-We check for missing values across datasets:
+We check for missing values across the main datasets.\
+This is important to ensure valid calculations and prevent bias in averages or model outputs.
 
 ```{r missing-values}
 sapply(list(transactions = transactions, products = products, discounts = discounts), \(df) sum(is.na(df)))
 ```
 
-## Exploratory Data Analysis
+## Exploratory Analysis
 
 ### Top 10 Stores by Revenue
 
@@ -110,7 +109,7 @@ ggplot(revenue_by_store, aes(x = fct_reorder(store_label, total_revenue), y = to
   labs(title = "Top 10 Stores by Total Revenue", x = "Store ID", y = "Total Revenue")
 ```
 
-### Revenue Over Time
+### Monthly Revenue Trend
 
 ```{r}
 transactions_by_month <- transactions |> 
@@ -124,7 +123,7 @@ ggplot(transactions_by_month, aes(x = month, y = total_revenue)) +
   labs(title = "Monthly Revenue Trend", x = "Month", y = "Revenue")
 ```
 
-### Revenue by Product Category
+### Average Revenue by Product Category
 
 ```{r}
 revenue_by_category <- transactions |> 
@@ -137,7 +136,7 @@ ggplot(revenue_by_category, aes(x = fct_reorder(category, avg_revenue), y = avg_
   geom_col(fill = "#7ACCB8") +
   coord_flip() +
   scale_y_continuous(labels = label_comma()) +
-  labs(title = "Average Revenue by Product Category", x = "Category", y = "Avg. Line Revenue")
+  labs(title = "Average Revenue by Product Category", x = "Product Category", y = "Average Revenue")
 ```
 
 ### Revenue Distribution: Discount vs. No Discount
@@ -148,10 +147,27 @@ transactions |>
   ggplot(aes(x = discount_applied, y = line_total)) +
   geom_boxplot(fill = "#CBD5D1", color = "#4FB8A8") +
   scale_y_log10(labels = label_comma()) +
-  labs(title = "Revenue Distribution by Discount Applied", x = "Discount Applied", y = "Line Total (log10)")
+  labs(title = "Revenue Distribution by Discount Applied", x = "Discount Applied", y = "Revenue (log10)")
 ```
 
-## Confidence Interval with `qnorm()`
+### Revenue vs. Store Size (Scatterplot)
+
+```{r}
+revenue_by_store_size <- transactions |> 
+  group_by(store_id) |> 
+  summarise(total_revenue = sum(line_total, na.rm = TRUE)) |> 
+  mutate(store_id = as.numeric(as.character(store_id))) |> 
+  left_join(stores, by = "store_id")
+
+ggplot(revenue_by_store_size, aes(x = number_of_employees, y = total_revenue)) +
+  geom_point(alpha = 0.6, color = "#6BCABA", size = 2) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title = "Revenue by Store Size", x = "Number of Employees", y = "Total Revenue")
+```
+
+## Confidence Interval using `qnorm()`
+
+We calculate 95% confidence intervals using the standard formula:
 
 ```r
 qnorm(c(0.025, 0.975), mean, sd / sqrt(n))
@@ -168,9 +184,11 @@ ci_discount <- transactions |>
     upper_ci = qnorm(0.975, mean, sd / sqrt(n))
   )
 
-ci_discount |> gt() |> 
-  tab_header(title = "95% Confidence Intervals for Line Revenue") |> 
-  fmt_number(columns = 2:5, decimals = 2)
+ci_discount |> 
+  rename(std_dev = sd) |> 
+  gt() |> 
+  tab_header(title = "95% Confidence Intervals for Revenue per Transaction") |> 
+  fmt_number(columns = 2:6, decimals = 2)
 ```
 
 ## Linear Regression Model
@@ -201,7 +219,7 @@ tidy_model |>
   fmt_number(columns = 2:5, decimals = 4)
 ```
 
-## Summary Tables
+## Summary Table by Payment Method
 
 ```{r payment-summary}
 transactions |> 
@@ -213,18 +231,24 @@ transactions |>
   ) |> 
   arrange(desc(avg_revenue)) |> 
   gt() |> 
-  tab_header(title = "Average Line Revenue by Payment Method") |> 
+  tab_header(title = "Average Revenue per Transaction by Payment Method") |> 
   fmt_number(columns = 2, decimals = 2)
 ```
 
 ## Conclusion
 
-This analysis shows that line-level revenue in fashion retail is shaped by several statistically measurable factors:
+This analysis shows that revenue per transaction in fashion retail is not random, but driven by several statistically measurable factors:
 
-- **Discounts**: Transactions with discounts resulted in significantly lower revenue (~−64 CHF).
-- **Product Category**: Categories like “Masculine” performed better than "Children".
-- **Payment Method**: Credit card transactions produced slightly higher revenues.
+- **Discounts** significantly lower the revenue per transaction (approx. −64 CHF)  
+- **Product categories** like “Masculine” result in higher average sales than others  
+- **Payment methods** like credit cards produce slightly higher revenues
 
-While the model explains about 2.7% of the variance (R² = 0.0271), the identified effects are strong and consistent with practical expectations.
+The linear model explains about **2.7% of total variance** – a realistic value for transactional business data.
+
+### Practical Implications:
+
+- Use discounts strategically to avoid unnecessary revenue loss  
+- Optimize the product mix based on data-driven category insights  
+- Consider payment methods when planning pricing or promotions  
 
 > *This report fulfills all requirements of the NDK HF Transfer Project and is fully reproducible.*
