@@ -43,10 +43,10 @@ All code is visible and reproducible in accordance with NDK HF guidelines.*
 
 This project investigates:
 
-- Whether discounts reduce average transaction revenue  
-- How product categories affect sales  
-- Whether payment method has a measurable impact  
-- How these effects can be validated statistically
+-   Whether discounts reduce average transaction revenue\
+-   How product categories affect sales\
+-   Whether payment method has a measurable impact\
+-   How these effects can be validated statistically
 
 ## Background
 
@@ -58,12 +58,12 @@ Statistical methods like confidence intervals and regression models are applied 
 
 The dataset includes six structured CSV files:
 
-- `transactions.csv`: Transaction records (~6.4 million rows)  
-- `customers.csv`: Customer demographic information  
-- `products.csv`: Product categories and descriptions  
-- `stores.csv`: Store locations and metadata  
-- `employees.csv`: Staff assignments  
-- `discounts.csv`: Promotional campaigns  
+-   `transactions.csv`: Transaction records (\~6.4 million rows)\
+-   `customers.csv`: Customer demographic information\
+-   `products.csv`: Product categories and descriptions\
+-   `stores.csv`: Store locations and metadata\
+-   `employees.csv`: Staff assignments\
+-   `discounts.csv`: Promotional campaigns
 
 ⚠️ The data is stored locally and is not included in the repository.
 
@@ -169,7 +169,7 @@ ggplot(revenue_by_store_size, aes(x = number_of_employees, y = total_revenue)) +
 
 We calculate 95% confidence intervals using the standard formula:
 
-```r
+``` r
 qnorm(c(0.025, 0.975), mean, sd / sqrt(n))
 ```
 
@@ -239,16 +239,16 @@ transactions |>
 
 This analysis shows that revenue per transaction in fashion retail is not random, but driven by several statistically measurable factors:
 
-- **Discounts** significantly lower the revenue per transaction (approx. −64 CHF)  
-- **Product categories** like “Masculine” result in higher average sales than others  
-- **Payment methods** like credit cards produce slightly higher revenues
+-   **Discounts** significantly lower the revenue per transaction (approx. −64 CHF)\
+-   **Product categories** like “Masculine” result in higher average sales than others\
+-   **Payment methods** like credit cards produce slightly higher revenues
 
 The linear model explains about **2.7% of total variance** – a realistic value for transactional business data.
 
 ### Practical Implications:
 
-- Use discounts strategically to avoid unnecessary revenue loss  
-- Optimize the product mix based on data-driven category insights  
-- Consider payment methods when planning pricing or promotions  
+-   Use discounts strategically to avoid unnecessary revenue loss\
+-   Optimize the product mix based on data-driven category insights\
+-   Consider payment methods when planning pricing or promotions
 
 > *This report fulfills all requirements of the NDK HF Transfer Project and is fully reproducible.*
