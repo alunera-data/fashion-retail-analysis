@@ -6,11 +6,7 @@
 .DS_Store
 
 # Lokale Daten
-data/
-fashion-retail-analysis_DE.html
-fashion-retail-analysis_DE.qmd
-fashion-retail-analysis_DE.html
-fashion-retail-analysis_DE_files/
+
 
 # Temporäre Dateien
 *.log
